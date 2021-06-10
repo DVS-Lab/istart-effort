@@ -97,7 +97,7 @@ for i = 1:length(sourcedata)
 %         end
 %         datahb(idx,3) = data(t,4);
 %     end
-disp(i);
+disp(subnum_str);
 end
 
 % % write out a sublist for later
