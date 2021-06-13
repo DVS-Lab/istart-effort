@@ -95,10 +95,9 @@ for d = 1:length(domains)
                 data_mat((i+m_length),5) = percent_hard_prob50;
                 data_mat((i+m_length),6) = percent_hard_prob88;
             end
-        end     
+        end
+        
         %keyboard
-        % make subject list for later
-        sublist(i,1) = str2double(subnum_str);
         
         % build output file with header
         %outname = [subnum_str '_' condition_str '.csv'];
@@ -112,13 +111,8 @@ for d = 1:length(domains)
         disp(subnum_str);
     end
     
-    % % write out a sublist for later
-    if domain == 0
-        dlmwrite('M_sublist.txt',unique(sublist));
-    else
-        if domain == 1
-            dlmwrite('S_sublist.txt',unique(sublist));
-        end
-    end
 end
+
+data_mat_m = data_mat(data_mat(:,1)==1,:);
+data_mat_s = data_mat(data_mat(:,1)==2,:);
 % dlmwrite('indata_hBayesDM.tsv',datahb,'delimiter','\t','-append');
