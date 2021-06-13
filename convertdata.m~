@@ -17,6 +17,7 @@
 clear;
 maindir = pwd;
 
+% set domain (i.e., 0 = monetary, 1 = social)
 domains = {'monetary', 'social'};
 for d = 1:length(domains)
     domain = domains{d};
@@ -64,6 +65,9 @@ for d = 1:length(domains)
         percent_hard_prob50 = sum(prob_50(:,1))/(length(prob_50(:,1)));
         percent_hard_prob88 = sum(prob_88(:,1))/(length(prob_88(:,1)));
         
+        % fill in data_mat
+        datamat(i,1) = 
+        
         % get file name parts
         fname_split = split(fname,'_');
         condition_str = fname_split{1};
@@ -73,15 +77,8 @@ for d = 1:length(domains)
         fname_split2 = split(subnum_str,'.');
         subnum_str = fname_split2{1};
         
-        % fill in data_mat
-        data_mat(i,1) = d;
-        data_mat(i,2) = str2double(subnum_str);
-        data_mat(i,3) = percent_hard_overall;
-        data_mat(i,4) = percent_hard_prob12;
-        data_mat(i,5) = percent_hard_prob50;
-        data_mat(i,6) = percent_hard_prob88;
         
-        %keyboard
+        keyboard
         % make subject list for later
         sublist(i,1) = str2double(subnum_str);
         
