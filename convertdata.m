@@ -18,6 +18,9 @@ clear;
 maindir = pwd;
 
 domains = {'monetary', 'social'};
+
+m_length = 0;
+
 for d = 1:length(domains)
     domain = domains{d};
     
@@ -28,10 +31,11 @@ for d = 1:length(domains)
     sourcedata = sourcedata(1,1:end);
     
     % make matrix to store data
-    % 5 columns: sub, % hard choices overall, prob 12, 50, 88
-    data_mat = zeros(length(sourcedata),5);
-    
-    
+    % 6 columns: domain, sub, % hard choices overall, prob 12, 50, 88
+    if d == 1
+        data_mat = zeros(length(sourcedata),6);
+    end
+       
     sublist = zeros(length(sourcedata),1); % add subs here, print later
     idx = 0;
     for i = 1:length(sourcedata)
@@ -74,18 +78,27 @@ for d = 1:length(domains)
         subnum_str = fname_split2{1};
         
         % fill in data_mat
-        data_mat(i,1) = d;
-        data_mat(i,2) = str2double(subnum_str);
-        data_mat(i,3) = percent_hard_overall;
-        data_mat(i,4) = percent_hard_prob12;
-        data_mat(i,5) = percent_hard_prob50;
-        data_mat(i,6) = percent_hard_prob88;
-        
+        if d == 1
+            data_mat(i,1) = d;
+            data_mat(i,2) = str2double(subnum_str);
+            data_mat(i,3) = percent_hard_overall;
+            data_mat(i,4) = percent_hard_prob12;
+            data_mat(i,5) = percent_hard_prob50;
+            data_mat(i,6) = percent_hard_prob88;
+            m_length = m_length + 1;
+        else 
+            if d == 2
+                data_mat((i+m_length),1) = d;
+                data_mat((i+m_length),2) = str2double(subnum_str);
+                data_mat((i+m_length),3) = percent_hard_overall;
+                data_mat((i+m_length),4) = percent_hard_prob12;
+                data_mat((i+m_length),5) = percent_hard_prob50;
+                data_mat((i+m_length),6) = percent_hard_prob88;
+            end
+        end     
         %keyboard
         % make subject list for later
         sublist(i,1) = str2double(subnum_str);
-        
-        
         
         % build output file with header
         %outname = [subnum_str '_' condition_str '.csv'];
@@ -95,6 +108,7 @@ for d = 1:length(domains)
         %fprintf(fid,'%s\n',cHeader);
         %fclose(fid);
         
+        disp(domain);
         disp(subnum_str);
     end
     
