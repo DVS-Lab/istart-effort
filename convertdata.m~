@@ -179,10 +179,9 @@ disp(stats);
 % bar graph
 domain_hard_avgs = [];
 domain_hard_avgs(1,1:2) = [mean(data_mat2(:,3)), mean(data_mat2(:,10))];
-% x = categorical({'Monetary','Social'});
-% y = [.3388 .1675];
-% y = domain_hard_avgs;
-% bar(x,y);
+x = categorical({'Monetary','Social'});
+y = domain_hard_avgs;
+
 bar(domain_hard_avgs);
 
 %%
