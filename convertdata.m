@@ -49,7 +49,8 @@ for d = 1:length(domains)
         choice = data(:,22);
         reward_probability = data(:,28);
         expected_value = data(:,21) .* data(:,28) ./ 100;
-        effort_data = [reward choice reward_probability expected_value];
+        reward_bins = [];
+        effort_data = [reward choice reward_probability expected_value reward_bins];
         
         % remove misses
         effort_data(effort_data(:,2)==2,:) = [];
@@ -72,6 +73,45 @@ for d = 1:length(domains)
         percent_hard_prob50 = sum(prob_50(:,2))/(length(prob_50(:,1)));
         percent_hard_prob88 = sum(prob_88(:,2))/(length(prob_88(:,1)));
         
+        % separate reward magnitudes into bins
+        % monetary: max 4.21, min 1.24
+        % low = 1.24-2.23; med = 2.24-3.22; high = 3.23-4.21
+        if d == 1
+            for f = 1:length(data(:,21))
+                if (1.23<data(f,21)) && (data(f,21)<2.24)
+                    effort_data(f,5) = 1;
+                else
+                    if (2.23<data(f,21)) && (data(f,21)<3.23)
+                        effort_data(f,5) = 2;
+                    else
+                        if (3.22<data(f,21)) && (data(f,21)<4.22)
+                        effort_data(f,5) = 3;
+                        end
+                    end
+                end
+            end
+        else    
+        % social: max 29.37 mins, min 8.65 mins
+        % low = 8.65-15.57; med = 15.58-22.46; high = 22.47-29.37
+        % 1020, 1021, and 1023 have different amounts for social than the
+        % other participants
+            if d == 2
+                for f = 1:length(data(:,21))
+                    if (8.64<data(f,21)) && (data(f,21)<15.58)
+                        effort_data((f+m_length),5) = 1;
+                    else
+                        if (15.57<data(f,21)) && (data(f,21)<22.47)
+                            effort_data((f+m_length),5) = 2;
+                        else
+                            if (22.46<data(f,21)) && (data(f,21)<29.38)
+                                effort_data((f+m_length),5) = 3;
+                            end
+                        end
+                    end
+                end
+            end
+        end    
+ 
         % average expected value
         expected_value_avg = mean(expected_value);
         
@@ -129,11 +169,12 @@ data_mat_s = data_mat(data_mat(:,1)==2,:);
 
 % resize monetary so to remove key and sub with no social data, then
 % concatenate monetary and social matrices
-data_mat_m2 = data_mat_m
+data_mat_m2 = data_mat_m;
 data_mat_m2(4,:) = []; %removes sub 1004
 data_mat_m2(19,:) = []; %removes "key"
 data_mat2 = [data_mat_m2 data_mat_s];
 
+writematrix(data_mat2, 'data_mat.csv');
 
 keyboard 
 
@@ -153,8 +194,8 @@ xlabel('Monetary (1) Social (2)');
 
 %% anova: does proportion of hard-task choices differ by reward probability?
 % monetary
-money_prob = data_mat_m(:,4:6)
-[p,tbl,stats] = anova1(money_prob);
+money_prob = data_mat_m(:,4:6);
+[h,~,~,~] = anova1(money_prob);
 
 % monetary bar graph
 money_prob_avgs = [];
@@ -165,8 +206,8 @@ title('Proportion of hard-task choices per reward probability in the monetary do
 xlabel('12% (1)   50% (2)   88% (3)');
 
 % social
-social_prob = data_mat_s(:,4:6)
-[p,tbl,stats] = anova1(social_prob);
+social_prob = data_mat_s(:,4:6);
+[~,~,~] = anova1(social_prob);
 
 % social bar graph
 social_prob_avgs = [];
@@ -180,11 +221,10 @@ figure;
 histogram(social_prob(:,1));
 
 % monetary and social together
-money_prob2 = data_mat_m2(:,4:6)
+money_prob2 = data_mat_m2(:,4:6);
 total_prob = [money_prob2 social_prob];
 [p,tbl,stats] = anova1(total_prob);
 
-total_prob_avgs = [];
 total_prob_avgs = [money_prob_avgs social_prob_avgs];
 figure;
 bar(total_prob_avgs)
