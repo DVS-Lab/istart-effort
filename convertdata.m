@@ -176,6 +176,9 @@ bar(social_prob_avgs)
 title('Proportion of hard-task choices per reward probability in the social domain')
 xlabel('12% (1)   50% (2)   88% (3)');
 
+figure;
+histogram(social_prob(:,1));
+
 % monetary and social together
 money_prob2 = data_mat_m2(:,4:6)
 total_prob = [money_prob2 social_prob];
