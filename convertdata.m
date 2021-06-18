@@ -112,8 +112,7 @@ for d = 1:length(domains)
                     end
                 end
             end
-        else    
-        keyboard
+        else
         % social: max 29.37 mins, min 8.65 mins
         % low = 8.65-15.57; med = 15.58-22.46; high = 22.47-29.37
         % 1020, 1021, and 1023 have different amounts for social than the
@@ -124,10 +123,10 @@ for d = 1:length(domains)
                         effort_data((f+m_length),2) = 1;
                     else
                         if (15.57<(effort_data(f,1))) && ((effort_data(f,1))<22.47)
-                            effort_data((f+m_length),5) = 2;
+                            effort_data((f+m_length),2) = 2;
                         else
                             if (22.46<(effort_data(f,1))) && ((effort_data(f,1))<29.38)
-                                effort_data((f+m_length),5) = 3;
+                                effort_data((f+m_length),2) = 3;
                             end
                         end
                     end
@@ -135,6 +134,21 @@ for d = 1:length(domains)
             end
         end    
         
+        % separate reward bins
+        reward_low = effort_data;
+        reward_low(reward_low(:,2)~=1,:) = [];
+        
+        reward_mid = effort_data;
+        reward_mid(reward_mid(:,2)~=2,:) = [];
+        
+        reward_hi = effort_data;
+        reward_hi(reward_hi(:,2)~=3,:) = [];
+        
+        % percentage hard for each reward bin
+        percent_hard_reward_low = sum(reward_low(:,4))/(length(reward_low(:,4)));
+        percent_hard_reward_mid = sum(reward_mid(:,4))/(length(reward_mid(:,4)));
+        percent_hard_reward_hi = sum(reward_hi(:,4))/(length(reward_hi(:,4)));
+
         % average expected value
         %expected_value_avg = mean(expected_value);
         
@@ -155,6 +169,9 @@ for d = 1:length(domains)
             data_mat(i,4) = percent_hard_prob12;
             data_mat(i,5) = percent_hard_prob50;
             data_mat(i,6) = percent_hard_prob88;
+            data_mat(i,7) = percent_hard_reward_low;
+            data_mat(i,8) = percent_hard_reward_mid;
+            data_mat(i,9) = percent_hard_reward_hi;
             %data_mat(i,7) = expected_value_avg; % something wrong with this (NaNs)
             m_length = m_length + 1;
         else 
@@ -165,6 +182,9 @@ for d = 1:length(domains)
                 data_mat((i+m_length),4) = percent_hard_prob12;
                 data_mat((i+m_length),5) = percent_hard_prob50;
                 data_mat((i+m_length),6) = percent_hard_prob88;
+                data_mat((i+m_length),7) = percent_hard_reward_low;
+                data_mat((i+m_length),8) = percent_hard_reward_mid;
+                data_mat((i+m_length),9) = percent_hard_reward_hi;
                 %data_mat((i+m_length),7) = expected_value_avg; % something wrong with this (NaNs)
             end
         end
@@ -194,15 +214,15 @@ data_mat_s = data_mat(data_mat(:,1)==2,:);
 % concatenate monetary and social matrices
 data_mat_m2 = data_mat_m;
 data_mat_m2(4,:) = []; %removes sub 1004
-data_mat_m2(19,:) = []; %removes "key"
+%data_mat_m2(19,:) = []; %removes "key"
 data_mat2 = [data_mat_m2 data_mat_s];
 
 writematrix(data_mat2, 'data_mat.csv');
 
-keyboard 
+% keyboard 
 
 %% t-test: does proportion of hard-task choices overall differ between monetary and social domains?
-[h,p,ci,stats] = ttest(data_mat2(:,3),data_mat2(:,10));
+[h,p,ci,stats] = ttest(data_mat2(:,3),data_mat2(:,12));
 disp(h);
 disp(p);
 disp(ci);
@@ -210,7 +230,7 @@ disp(stats);
 
 % bar graph
 domain_hard_avgs = [];
-domain_hard_avgs(1,1:2) = [mean(data_mat2(:,3)), mean(data_mat2(:,10))];
+domain_hard_avgs(1,1:2) = [mean(data_mat2(:,3)), mean(data_mat2(:,12))];
 bar(domain_hard_avgs)
 title('Proportion of hard-task choices')
 xlabel('Monetary (1) Social (2)');
@@ -218,7 +238,7 @@ xlabel('Monetary (1) Social (2)');
 %% anova: does proportion of hard-task choices differ by reward probability?
 % monetary
 money_prob = data_mat_m(:,4:6);
-[h,~,~,~] = anova1(money_prob);
+[h,~,ci,~] = anova1(money_prob);
 
 % monetary bar graph
 money_prob_avgs = [];
