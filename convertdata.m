@@ -320,6 +320,7 @@ hold off
 
 % social
 social_mag = data_mat_s(:,7:9);
+social_mag(any(isnan(social_mag),1),:) = [];
 [p,tbl,stats] = anova1(social_mag);
 
 % social bar graph
@@ -327,9 +328,9 @@ social_mag_avgs = [];
 social_mag_avgs(1,1:3) = [nanmean(social_mag(:,1)), nanmean(social_mag(:,2)), nanmean(social_mag(:,3))];
 
 % standard error
-sem1 = std(social_mag(:,1))/sqrt(length(social_mag(:,1)));
-sem2 = std(social_mag(:,2))/sqrt(length(social_mag(:,2)));
-sem3 = std(social_mag(:,3))/sqrt(length(social_mag(:,3)));
+sem1 = nanstd(social_mag(:,1))/sqrt(length(social_mag(:,1)));
+sem2 = nanstd(social_mag(:,2))/sqrt(length(social_mag(:,2)));
+sem3 = nanstd(social_mag(:,3))/sqrt(length(social_mag(:,3)));
 err = [sem1 sem2 sem3];
 
 figure;
