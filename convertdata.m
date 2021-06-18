@@ -262,7 +262,8 @@ figure;
 bar(money_prob_avgs)
 title('Proportion of hard-task choices per reward probability in the monetary domain')
 ylabel('proportion of hard-task choices')
-xlabel('12% (1)   50% (2)   88% (3)');
+xlabel('12% (1)   50% (2)   88% (3)')
+ylim([0 .7]);
 
 % social
 social_prob = data_mat_s(:,4:6);
@@ -275,7 +276,8 @@ figure;
 bar(social_prob_avgs)
 title('Proportion of hard-task choices per reward probability in the social domain')
 ylabel('proportion of hard-task choices')
-xlabel('12% (1)   50% (2)   88% (3)');
+xlabel('12% (1)   50% (2)   88% (3)')
+ylim([0 .7]);
 
 % monetary and social together
 money_prob2 = data_mat_m2(:,4:6);
@@ -309,6 +311,7 @@ bar(money_mag_avgs)
 title('Proportion of hard-task choices per reward magnitude in the monetary domain')
 ylabel('proportion of hard-task choices')
 xlabel('low reward (1)   mid reward (2)   high reward (3)')
+ylim([0 .7])
 
 hold on
 
@@ -338,6 +341,7 @@ bar(social_mag_avgs)
 title('Proportion of hard-task choices per reward magnitude in the social domain')
 ylabel('proportion of hard-task choices')
 xlabel('low reward (1)   mid reward (2)   high reward (3)')
+ylim([0 .7])
 
 hold on
 
