@@ -222,7 +222,7 @@ writematrix(data_mat2, 'data_mat.csv');
 % keyboard 
 
 %% t-test: does proportion of hard-task choices overall differ between monetary and social domains?
-[h,p,ci,stats] = ttest(data_mat2(:,3),data_mat2(:,10));
+[h,p,ci,stats] = ttest(data_mat2(:,3),data_mat2(:,12));
 disp(h);
 disp(p);
 disp(ci);
@@ -230,7 +230,7 @@ disp(stats);
 
 % bar graph
 domain_hard_avgs = [];
-domain_hard_avgs(1,1:2) = [mean(data_mat2(:,3)), mean(data_mat2(:,10))];
+domain_hard_avgs(1,1:2) = [mean(data_mat2(:,3)), mean(data_mat2(:,12))];
 bar(domain_hard_avgs)
 title('Proportion of hard-task choices')
 xlabel('Monetary (1) Social (2)');
@@ -238,7 +238,7 @@ xlabel('Monetary (1) Social (2)');
 %% anova: does proportion of hard-task choices differ by reward probability?
 % monetary
 money_prob = data_mat_m(:,4:6);
-[h,p,ci,stats] = anova1(money_prob);
+[p,tbl,stats] = anova1(money_prob);
 
 % monetary bar graph
 money_prob_avgs = [];
@@ -250,7 +250,7 @@ xlabel('12% (1)   50% (2)   88% (3)');
 
 % social
 social_prob = data_mat_s(:,4:6);
-[~,~,~] = anova1(social_prob);
+[p,tbl,stats] = anova1(social_prob);
 
 % social bar graph
 social_prob_avgs = [];
@@ -260,8 +260,7 @@ bar(social_prob_avgs)
 title('Proportion of hard-task choices per reward probability in the social domain')
 xlabel('12% (1)   50% (2)   88% (3)');
 
-figure;
-histogram(social_prob(:,1));
+
 
 % monetary and social together
 money_prob2 = data_mat_m2(:,4:6);
