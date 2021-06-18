@@ -231,9 +231,24 @@ disp(stats);
 % bar graph
 domain_hard_avgs = [];
 domain_hard_avgs(1,1:2) = [mean(data_mat2(:,3)), mean(data_mat2(:,12))];
+
+% standard error
+sem1 = std(data_mat2(:,3))/sqrt(length(data_mat2(:,3)));
+sem2 = std(data_mat2(:,12))/sqrt(length(data_mat2(:,12)));
+err = [sem1 sem2];
+
 bar(domain_hard_avgs)
 title('Proportion of hard-task choices')
-xlabel('Monetary (1) Social (2)');
+ylabel('proportion of hard-task choices')
+xlabel('Monetary (1) Social (2)')
+
+hold on
+
+er = errorbar(domain_hard_avgs,err);
+er.Color = [0 0 0];
+er.LineStyle = 'none';
+
+hold off
 
 %% anova: does proportion of hard-task choices differ by reward probability?
 % monetary
@@ -246,6 +261,7 @@ money_prob_avgs(1,1:3) = [mean(money_prob(:,1)), mean(money_prob(:,2)), mean(mon
 figure;
 bar(money_prob_avgs)
 title('Proportion of hard-task choices per reward probability in the monetary domain')
+ylabel('proportion of hard-task choices')
 xlabel('12% (1)   50% (2)   88% (3)');
 
 % social
@@ -258,6 +274,7 @@ social_prob_avgs(1,1:3) = [nanmean(social_prob(:,1)), nanmean(social_prob(:,2)),
 figure;
 bar(social_prob_avgs)
 title('Proportion of hard-task choices per reward probability in the social domain')
+ylabel('proportion of hard-task choices')
 xlabel('12% (1)   50% (2)   88% (3)');
 
 % monetary and social together
@@ -269,6 +286,7 @@ total_prob_avgs = [money_prob_avgs social_prob_avgs];
 figure;
 bar(total_prob_avgs)
 title('Proportion of hard-task choices per reward probability in both domains')
+ylabel('proportion of hard-task choices')
 xlabel('M12% (1)   M50% (2)   M88% (3)   S12% (4)   S50% (5)   S88% (6)');
 
 %% anova: does proportion of hard-task choices differ by reward magnitude?
@@ -279,10 +297,26 @@ money_mag = data_mat_m(:,7:9);
 % monetary bar graph
 money_mag_avgs = [];
 money_mag_avgs(1,1:3) = [mean(money_mag(:,1)), mean(money_mag(:,2)), mean(money_mag(:,3))];
+
+% standard error
+sem1 = std(money_mag(:,1))/sqrt(length(money_mag(:,1)));
+sem2 = std(money_mag(:,2))/sqrt(length(money_mag(:,2)));
+sem3 = std(money_mag(:,3))/sqrt(length(money_mag(:,3)));
+err = [sem1 sem2 sem3];
+
 figure;
 bar(money_mag_avgs)
 title('Proportion of hard-task choices per reward magnitude in the monetary domain')
-xlabel('low reward (1)   mid reward (2)   high reward (3)');
+ylabel('proportion of hard-task choices')
+xlabel('low reward (1)   mid reward (2)   high reward (3)')
+
+hold on
+
+er = errorbar(money_mag_avgs,err);
+er.Color = [0 0 0];
+er.LineStyle = 'none';
+
+hold off
 
 % social
 social_mag = data_mat_s(:,7:9);
@@ -291,11 +325,26 @@ social_mag = data_mat_s(:,7:9);
 % social bar graph
 social_mag_avgs = [];
 social_mag_avgs(1,1:3) = [nanmean(social_mag(:,1)), nanmean(social_mag(:,2)), nanmean(social_mag(:,3))];
+
+% standard error
+sem1 = std(social_mag(:,1))/sqrt(length(social_mag(:,1)));
+sem2 = std(social_mag(:,2))/sqrt(length(social_mag(:,2)));
+sem3 = std(social_mag(:,3))/sqrt(length(social_mag(:,3)));
+err = [sem1 sem2 sem3];
+
 figure;
 bar(social_mag_avgs)
 title('Proportion of hard-task choices per reward magnitude in the social domain')
-xlabel('low reward (1)   mid reward (2)   high reward (3)');
+ylabel('proportion of hard-task choices')
+xlabel('low reward (1)   mid reward (2)   high reward (3)')
 
+hold on
+
+er = errorbar(social_mag_avgs,err);
+er.Color = [0 0 0];
+er.LineStyle = 'none';
+
+hold off
 
 %%
 
