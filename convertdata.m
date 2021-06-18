@@ -34,8 +34,6 @@ for f = 1:length(mat(:,1))
     end
 end
 
-keyboard
-
 %% Script
 
 clear;
@@ -71,14 +69,16 @@ for d = 1:length(domains)
         choice = data(:,22);
         reward_probability = data(:,28);
         expected_value = data(:,21) .* data(:,28) ./ 100;
-        reward_bins = [];
-        effort_data = [reward choice reward_probability expected_value reward_bins];
+        reward_bins = reward*0;
+        effort_data = [reward reward_bins reward_probability choice];
+        % remove NaNs
+        effort_data(any(isnan(effort_data),1),:) = [];
         
         % remove misses
-        effort_data(effort_data(:,2)==2,:) = [];
+        effort_data(effort_data(:,4)==2,:) = [];
         
         % calculate % hard overall
-        percent_hard_overall = nansum(effort_data(:,2))/(length(effort_data(:,2))-sum(isnan(effort_data(:,2))));
+        percent_hard_overall = nansum(effort_data(:,4))/(length(effort_data(:,4))-sum(isnan(effort_data(:,4))));
         
         % separate probabilities
         prob_12 = effort_data;
@@ -91,41 +91,42 @@ for d = 1:length(domains)
         prob_88(prob_88(:,3)~=88,:) = [];
         
         % percentage hard for each probability
-        percent_hard_prob12 = sum(prob_12(:,2))/(length(prob_12(:,1)));
-        percent_hard_prob50 = sum(prob_50(:,2))/(length(prob_50(:,1)));
-        percent_hard_prob88 = sum(prob_88(:,2))/(length(prob_88(:,1)));
+        percent_hard_prob12 = sum(prob_12(:,4))/(length(prob_12(:,4)));
+        percent_hard_prob50 = sum(prob_50(:,4))/(length(prob_50(:,4)));
+        percent_hard_prob88 = sum(prob_88(:,4))/(length(prob_88(:,4)));
         
         % separate reward magnitudes into bins
         % monetary: max 4.21, min 1.24
         % low = 1.24-2.23; med = 2.24-3.22; high = 3.23-4.21
         if d == 1
-            for f = 1:length(data(:,21))
-                if (1.23<data(f,21)) && (data(f,21)<2.24)
-                    effort_data(f,5) = 1;
+            for f = 1:length(effort_data(:,1))
+                if (1.23<(effort_data(f,1))) && ((effort_data(f,1))<2.24)
+                    effort_data(f,2) = 1;
                 else
-                    if (2.23<data(f,21)) && (data(f,21)<3.23)
-                        effort_data(f,5) = 2;
+                    if (2.23<(effort_data(f,1))) && ((effort_data(f,1))<3.23)
+                        effort_data(f,2) = 2;
                     else
-                        if (3.22<data(f,21)) && (data(f,21)<4.22)
-                        effort_data(f,5) = 3;
+                        if (3.22<(effort_data(f,1))) && ((effort_data(f,1))<4.22)
+                        effort_data(f,2) = 3;
                         end
                     end
                 end
             end
         else    
+        keyboard
         % social: max 29.37 mins, min 8.65 mins
         % low = 8.65-15.57; med = 15.58-22.46; high = 22.47-29.37
         % 1020, 1021, and 1023 have different amounts for social than the
         % other participants
             if d == 2
-                for f = 1:length(data(:,21))
-                    if (8.64<data(f,21)) && (data(f,21)<15.58)
-                        effort_data((f+m_length),5) = 1;
+                for f = 1:length(effort_data(:,1))
+                    if (8.64<(effort_data(f,1))) && ((effort_data(f,1))<15.58)
+                        effort_data((f+m_length),2) = 1;
                     else
-                        if (15.57<data(f,21)) && (data(f,21)<22.47)
+                        if (15.57<(effort_data(f,1))) && ((effort_data(f,1))<22.47)
                             effort_data((f+m_length),5) = 2;
                         else
-                            if (22.46<data(f,21)) && (data(f,21)<29.38)
+                            if (22.46<(effort_data(f,1))) && ((effort_data(f,1))<29.38)
                                 effort_data((f+m_length),5) = 3;
                             end
                         end
@@ -133,9 +134,9 @@ for d = 1:length(domains)
                 end
             end
         end    
- 
+        
         % average expected value
-        expected_value_avg = mean(expected_value);
+        %expected_value_avg = mean(expected_value);
         
         % get file name parts
         fname_split = split(fname,'_');
@@ -154,7 +155,7 @@ for d = 1:length(domains)
             data_mat(i,4) = percent_hard_prob12;
             data_mat(i,5) = percent_hard_prob50;
             data_mat(i,6) = percent_hard_prob88;
-            data_mat(i,7) = expected_value_avg; % something wrong with this (NaNs)
+            %data_mat(i,7) = expected_value_avg; % something wrong with this (NaNs)
             m_length = m_length + 1;
         else 
             if d == 2
@@ -164,7 +165,7 @@ for d = 1:length(domains)
                 data_mat((i+m_length),4) = percent_hard_prob12;
                 data_mat((i+m_length),5) = percent_hard_prob50;
                 data_mat((i+m_length),6) = percent_hard_prob88;
-                data_mat((i+m_length),7) = expected_value_avg; % something wrong with this (NaNs)
+                %data_mat((i+m_length),7) = expected_value_avg; % something wrong with this (NaNs)
             end
         end
         
