@@ -17,24 +17,21 @@
 %% Experimenting with loop
 
 mat(1,1) = 1;
-mat(2,1) = 5;
-mat(3,1) = 10;
-
-for f = 1:length(mat(:,1))
-    if (0<mat(f,1)) && (mat(f,1)<2)
-        mat(f,2) = 1;
+mat(1,2) = 5;
+mat(
+for f = 1:length(data(:,21))
+    if (1.23<data(f,21)) && (data(f,21)<2.24)
+        effort_data(f,5) = 1;
     else
-        if (3<mat(f,1)) && (mat(f,1)<7)
-            mat(f,2) = 2;
+        if (2.23<data(f,21)) && (data(f,21)<3.23)
+            effort_data(f,5) = 2;
           else
-              if (8<mat(f,1)) && (mat(f,1)<11)
-                mat(f,2) = 3;
+              if (3.22<data(f,21)) && (data(f,21)<4.22)
+                effort_data(f,5) = 3;
               end
         end
     end
 end
-
-keyboard
 
 %% Script
 
