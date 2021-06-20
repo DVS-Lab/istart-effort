@@ -14,26 +14,6 @@
 % a.) loop through all of your participants
 % b.) read in the data files
 
-%% Experimenting with loop
-
-mat(1,1) = 1;
-mat(2,1) = 5;
-mat(3,1) = 10;
-
-for f = 1:length(mat(:,1))
-    if (0<mat(f,1)) && (mat(f,1)<2)
-        mat(f,2) = 1;
-    else
-        if (3<mat(f,1)) && (mat(f,1)<7)
-            mat(f,2) = 2;
-          else
-              if (8<mat(f,1)) && (mat(f,1)<11)
-                mat(f,2) = 3;
-              end
-        end
-    end
-end
-
 %% Script
 
 clear;
@@ -148,7 +128,25 @@ for d = 1:length(domains)
         percent_hard_reward_low = sum(reward_low(:,4))/(length(reward_low(:,4)));
         percent_hard_reward_mid = sum(reward_mid(:,4))/(length(reward_mid(:,4)));
         percent_hard_reward_hi = sum(reward_hi(:,4))/(length(reward_hi(:,4)));
-
+        
+        % prob of picking hard for each individual reward value:
+        % goal: column 1 = each different reward option (sorted);
+        % subsequent columns are all subject responses (0 vs. 1)
+        % reward_data_m = [];
+        if d == 1
+            for g = 1:length(data(:,21))
+                reward_data_m(g,1) = data(g,21);
+                %reward_source_data_m = data(:,22);
+                %reward_source_data_m(reward_source_data_m(:,1)==2,:) = NaN;
+                reward_data_m(g,i+1) = data(g,22);
+            end
+        else
+            if d == 2
+                for g = 1:length(effort_data(:,1))
+                end
+            end
+        end
+        
         % average expected value
         %expected_value_avg = mean(expected_value);
         
@@ -205,6 +203,18 @@ for d = 1:length(domains)
     
 end
 
+% find probability of choosing hard task for each reward value
+reward_values(:,1) = reward_data_m(:,1);
+reward_values_choices = reward_data_m(:,2:length(reward_data_m(1,:)));
+%percent_hard_rv = nansum(reward_values_probs(:,k))/(length(effort_data(:,4))-sum(isnan(effort_data(:,4))));
+
+for k = 1:length(reward_values_choices(:,1))
+    percent_hard_rv = nansum(reward_values_choices(k,:))/(length(reward_values_choices(k,:))-sum(isnan(reward_values_choices(k,:))));
+    reward_values(k,2) = percent_hard_rv;
+end
+
+reward_values_B = sort(reward_values);
+  
 % separate monetary and social domains from data_mat into their own
 % matrices
 data_mat_m = data_mat(data_mat(:,1)==1,:);
@@ -219,7 +229,7 @@ data_mat2 = [data_mat_m2 data_mat_s];
 
 writematrix(data_mat2, 'data_mat.csv');
 
-% keyboard 
+keyboard 
 
 %% t-test: does proportion of hard-task choices overall differ between monetary and social domains?
 [h,p,ci,stats] = ttest(data_mat2(:,3),data_mat2(:,12));
