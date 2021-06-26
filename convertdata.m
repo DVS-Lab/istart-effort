@@ -127,14 +127,16 @@ for d = 1:length(domains)
         % reward_data_m = zeros(length(data(:,21)),20);
         if d == 1
             for g = 1:length(data(:,21))
-                reward_data_m(g,1) = data(g,21);
+                reward_data_monetary(g,1) = data(g,21);
                 %reward_source_data_m = data(:,22);
                 %reward_source_data_m(reward_source_data_m(:,1)==2,:) = NaN;
-                reward_data_m(g,i+1) = data(g,22);
+                reward_data_monetary(g,i+1) = data(g,22);
             end
         else
             if d == 2
-                for g = 1:length(effort_data(:,1))
+                for g = 1:length(data(:,21))
+                    reward_data_social(g,1) = data(g,21);
+                    reward_data_social(g,i+1) = data(g,22); 
                 end
             end
         end
@@ -196,8 +198,8 @@ for d = 1:length(domains)
 end
 
 % find probability of choosing hard task for each reward value
-reward_values(:,1) = reward_data_m(:,1);
-reward_values_choices = reward_data_m(:,2:length(reward_data_m(1,:)));
+reward_values(:,1) = reward_data_monetary(:,1);
+reward_values_choices = reward_data_monetary(:,2:length(reward_data_monetary(1,:)));
 %percent_hard_rv = nansum(reward_values_probs(:,k))/(length(effort_data(:,4))-sum(isnan(effort_data(:,4))));
 
 for k = 1:length(reward_values_choices(:,1))
@@ -215,8 +217,8 @@ data_mat_social = data_mat(data_mat(:,1)==2,:);
 % resize monetary so to remove key and sub with no social data, then
 % concatenate monetary and social matrices
 data_mat_monetary(4,:) = []; %removes sub 1004
-%data_mat_m2(19,:) = []; %removes "key"
-data_mat = [data_mat_monetary data_mat_social];
+% data_mat_m2(19,:) = []; %removes "key"
+% data_mat = [data_mat_monetary data_mat_social];
 
 writematrix(data_mat, 'data_mat.csv');
 
