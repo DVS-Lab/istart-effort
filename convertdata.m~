@@ -372,8 +372,7 @@ for l = 1:length(reward_data_monetary(:,1))
     reward_probs(l,1)=reward_data_monetary(l,1);
     reward_probs(l,2)=nanmean(reward_data_monetary(l,2:length(reward_data_monetary(1,:))));
 end 
-reward_probs = sortrows(reward_probs);
-
+reward_probs = sortrows(reward_probs(:,1));
     
 
 %%
