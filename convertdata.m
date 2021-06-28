@@ -8,11 +8,7 @@
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-% 2021-06-09: updated by JBW3 (james.wyngaarden@temple.edu)
-%
-% First goals for update: 
-% a.) loop through all of your participants
-% b.) read in the data files
+% 2021-06-09: updated for ISTART effort task data by JBW3 (james.wyngaarden@temple.edu)
 
 %% Script
 
@@ -20,9 +16,13 @@ clear;
 maindir = pwd;
 
 domains = {'monetary', 'social'};
-m_length = 0; % preallocating var that determines number of monetary subs
+
+% preallocate vars that otherwise change sizes in loop below:
+m_length = 0;
 reward_data_monetary = NaN(94,20);
 reward_data_social = NaN(94,20);
+ev_data_monetary = reward_data_monetary;
+ev_data_social = reward_data_social;
 
 % first loop through monetary domain, then social
 for d = 1:length(domains)
@@ -77,8 +77,7 @@ for d = 1:length(domains)
         percent_hard_prob88 = sum(prob_88(:,4))/(length(prob_88(:,4)));
         
         % separate reward magnitudes into bins
-        % monetary: max 4.21, min 1.24
-        % low = 1.24-2.23; med = 2.24-3.22; high = 3.23-4.21
+        % monetary: low = 1.24-2.23; med = 2.24-3.22; high = 3.23-4.21
         if d == 1
             for f = 1:length(effort_data(:,1))
                 if (1.23<(effort_data(f,1))) && ((effort_data(f,1))<2.24)
@@ -95,10 +94,9 @@ for d = 1:length(domains)
             end
         else
             
-        % social: max 29.37 mins, min 8.65 mins
-        % low = 8.65-15.57; med = 15.58-22.46; high = 22.47-29.37
+        % social: low = 8.65-15.57; med = 15.58-22.46; high = 22.47-29.37
         % note: 1020, 1021, and 1023 have different amounts for social than the
-        % other participants
+        % other participants, have been removed from data dir
             if d == 2
                 for f = 1:length(effort_data(:,1))
                     if (8.64<(effort_data(f,1))) && ((effort_data(f,1))<15.58)
@@ -127,12 +125,7 @@ for d = 1:length(domains)
         percent_hard_reward_mid = sum(reward_mid(:,4))/(length(reward_mid(:,4)));
         percent_hard_reward_hi = sum(reward_hi(:,4))/(length(reward_hi(:,4)));
         
-%         % prob of picking hard for each individual reward value:
-%         % goal: column 1 = each different reward option (sorted);
-%         % subsequent columns are all subject responses (0 vs. 1)
-%         % reward_data_m = zeros(length(data(:,21)),20);
-%         % reward_data_monetary = reward;
-%         % reward_data_social = reward;
+        % prob of picking hard for each individual reward value:
         if d == 1
             if length(reward(:,1))>length(reward_data_monetary(:,1))
                 diff = length(reward(:,1)) - length(reward_data_monetary(:,1));
@@ -151,6 +144,29 @@ for d = 1:length(domains)
                 end
                 for h = 1:length(choice(:,1)) 
                 reward_data_social(h,1+i) = choice(h,1);
+                end
+            end
+        end
+        
+        % prob of picking hard for each expected value
+        if d == 1
+            if length(expected_value(:,1))>length(ev_data_monetary(:,1))
+                diff = length(expected_value(:,1)) - length(ev_data_monetary(:,1));
+                ev_data_monetary(1:length(expected_value(:,1)),1) = expected_value;
+                ev_data_monetary((length(expected_value(:,1))-diff):(length(expected_value(:,1))),(2):(length(ev_data_monetary(1,:)))) = NaN;
+            end
+            for h = 1:length(choice(:,1)) 
+            ev_data_monetary(h,1+i) = choice(h,1);
+            end
+        else
+            if d == 2
+                if length(expected_value(:,1))>length(ev_data_social(:,1))
+                    diff = length(expected_value(:,1)) - length(ev_data_social(:,1));
+                    ev_data_social(1:length(expected_value(:,1)),1) = expected_value;
+                    ev_data_social((length(expected_value(:,1))-diff):(length(expected_value(:,1))),(2):(length(ev_data_social(1,:)))) = NaN;
+                end
+                for h = 1:length(choice(:,1)) 
+                ev_data_social(h,1+i) = choice(h,1);
                 end
             end
         end
@@ -200,30 +216,17 @@ for d = 1:length(domains)
         %fprintf(fid,'%s\n',cHeader);
         %fclose(fid);
         
+        % print domain & subject ID while running
         disp(domain);
         disp(subnum_str);
     end
 end
-
-% find probability of choosing hard task for each reward value
-reward_values(:,1) = reward_data_monetary(:,1);
-reward_values_choices = reward_data_monetary(:,2:length(reward_data_monetary(1,:)));
-%percent_hard_rv = nansum(reward_values_probs(:,k))/(length(effort_data(:,4))-sum(isnan(effort_data(:,4))));
-
-for k = 1:length(reward_values_choices(:,1))
-    percent_hard_rv = nansum(reward_values_choices(k,:))/(length(reward_values_choices(k,:))-sum(isnan(reward_values_choices(k,:))));
-    reward_values(k,2) = percent_hard_rv;
-end
-
-reward_values = sort(reward_values);
   
-% separate monetary and social domains from data_mat into their own
-% matrices
+% separate monetary and social domains from data_mat into their own matrices
 data_mat_monetary = data_mat(data_mat(:,1)==1,:);
 data_mat_social = data_mat(data_mat(:,1)==2,:);
 
-% resize monetary so to remove key and sub with no social data, then
-% concatenate monetary and social matrices
+% resize monetary and concatenate monetary and social matrices
 data_mat_monetary(4,:) = []; %removes sub 1004
 data_mat = [data_mat_monetary(1:15,:) data_mat_social];
 
@@ -363,18 +366,73 @@ er.LineStyle = 'none';
 
 hold off
 
+%% plotting prop of hard choices for each expected value, non-binned
+
+fontSize1 = 18;
+fontSize2 = 15;
+
+% monetary
+ev_data_monetary(1:4,:) = []; % remove practice trials
+
+% create df with two columns: ev & proportion of hard task choices
+ev_probs_monetary = ev_data_monetary(:,1:2);
+for l = 1:length(ev_data_monetary(:,1))
+    ev_probs_monetary(l,1)=ev_data_monetary(l,1);
+    ev_probs_monetary(l,2)=nanmean(ev_data_monetary(l,2:length(ev_data_monetary(1,:))));
+end 
+ev_probs_monetary = sortrows(ev_probs_monetary);
+
+% plot
+figure;
+plot(ev_probs_monetary(:,1),ev_probs_monetary(:,2))
+title('Proportion of hard-task choices for each expected value in the monetary domain', 'FontSize', fontSize1)
+xlabel('Expected Value', 'FontSize', fontSize2)
+ylabel('Proportion of hard-task choices', 'FontSize', fontSize2);
+
+% social
+ev_data_social(1:4,:) = []; % remove practice trials
+
+% create df with two columns: ev & proportion of hard task choices
+ev_probs_social = ev_data_social(:,1:2);
+for l = 1:length(ev_data_social(:,1))
+    ev_probs_social(l,1)=ev_data_social(l,1);
+    ev_probs_social(l,2)=nanmean(ev_data_social(l,2:length(ev_data_social(1,:))));
+end 
+ev_probs_social = sortrows(ev_probs_social);
+
+% plot
+figure;
+plot(ev_probs_social(:,1),ev_probs_social(:,2))
+title('Proportion of hard-task choices for each expected value in the social domain', 'FontSize', fontSize1)
+xlabel('Expected Value', 'FontSize', fontSize2)
+ylabel('Proportion of hard-task choices', 'FontSize', fontSize2);
+
 %% plotting prop of hard choices for each reward magnitude, non-binned
 
+% NOTE: reward values get shown multiple times (i.e., the same value will
+% appear in column 1 of reward_probs more than once), need to find a way to
+% combine those, probably need to go back to the data file and sort before
+% doing any of the matrix stuff in the main script above
+
+%monetary
 reward_data_monetary(1:4,:) = [];
 
-reward_probs = reward_data_monetary(:,1:2);
+reward_probs_monetary = reward_data_monetary(:,1:2);
 for l = 1:length(reward_data_monetary(:,1))
-    reward_probs(l,1)=reward_data_monetary(l,1);
-    reward_probs(l,2)=nanmean(reward_data_monetary(l,2:length(reward_data_monetary(1,:))));
+    reward_probs_monetary(l,1)=reward_data_monetary(l,1);
+    reward_probs_monetary(l,2)=nanmean(reward_data_monetary(l,2:length(reward_data_monetary(1,:))));
 end 
-reward_probs = sortrows(reward_probs);
+reward_probs_monetary = sortrows(reward_probs_monetary);
 
-    
+% social
+reward_data_social(1:4,:) = [];
+
+reward_probs_social = reward_data_social(:,1:2);
+for l = 1:length(reward_data_social(:,1))
+    reward_probs_social(l,1)=reward_data_social(l,1);
+    reward_probs_social(l,2)=nanmean(reward_data_social(l,2:length(reward_data_social(1,:))));
+end 
+reward_probs_social = sortrows(reward_probs_social);
 
 %%
 
