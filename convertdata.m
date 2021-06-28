@@ -389,6 +389,10 @@ title('Proportion of hard-task choices for each expected value in the monetary d
 xlabel('Expected Value (dollars)', 'FontSize', fontSize2)
 ylabel('Proportion of hard-task choices', 'FontSize', fontSize2);
 
+[R,P] = corrcoef(ev_probs_monetary);
+disp(R);
+disp(P);
+
 % social
 ev_data_social(1:4,:) = []; % remove practice trials
 
@@ -406,6 +410,10 @@ plot(ev_probs_social(:,1),ev_probs_social(:,2))
 title('Proportion of hard-task choices for each expected value in the social domain', 'FontSize', fontSize1)
 xlabel('Expected Value (minutes of social media time)', 'FontSize', fontSize2)
 ylabel('Proportion of hard-task choices', 'FontSize', fontSize2);
+
+[R,P] = corrcoef(ev_probs_social);
+disp(R);
+disp(P);
 
 %% plotting prop of hard choices for each reward magnitude, non-binned
 
