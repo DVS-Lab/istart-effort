@@ -386,7 +386,7 @@ ev_probs_monetary = sortrows(ev_probs_monetary);
 figure;
 plot(ev_probs_monetary(:,1),ev_probs_monetary(:,2))
 title('Proportion of hard-task choices for each expected value in the monetary domain', 'FontSize', fontSize1)
-xlabel('Expected Value', 'FontSize', fontSize2)
+xlabel('Expected Value (dollars)', 'FontSize', fontSize2)
 ylabel('Proportion of hard-task choices', 'FontSize', fontSize2);
 
 % social
@@ -404,7 +404,7 @@ ev_probs_social = sortrows(ev_probs_social);
 figure;
 plot(ev_probs_social(:,1),ev_probs_social(:,2))
 title('Proportion of hard-task choices for each expected value in the social domain', 'FontSize', fontSize1)
-xlabel('Expected Value', 'FontSize', fontSize2)
+xlabel('Expected Value (minutes of social media time)', 'FontSize', fontSize2)
 ylabel('Proportion of hard-task choices', 'FontSize', fontSize2);
 
 %% plotting prop of hard choices for each reward magnitude, non-binned
