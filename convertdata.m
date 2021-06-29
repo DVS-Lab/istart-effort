@@ -9,6 +9,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % 2021-06-09: updated for ISTART effort task data by JBW3 (james.wyngaarden@temple.edu)
+% 1020, 1021, 1023 <- social subjects on different reward scale
 
 %% Script
 
@@ -26,6 +27,7 @@ ev_data_social = reward_data_social;
 
 % first loop through monetary domain, then social
 for d = 1:length(domains)
+    d=1
     domain = domains{d};
     
     % build path for data and create list of files
