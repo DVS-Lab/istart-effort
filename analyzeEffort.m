@@ -39,14 +39,13 @@ for d = 1:length(domains)
         T = T(:,{'Amount','Choice','Completed','Probability'});
         goodtrials = T.Choice < 2 & ~isnan(T.Choice);
         T = T(goodtrials,:);
+        T.zAmount = zscore(T.Amount);
+        T.zProbability = zscore(T.Probability);
         
         dsa = T;
-        modelspec = 'Choice ~ Amount*Probability + Amount:Probability';
-        %modelspec = 'Choice ~ Amount + Probability + Amount*Probability';
-        %modelspec = 'Choice ~ - Amount - Probability + Amount*Probability';
+        modelspec = 'Choice ~ zAmount + zProbability';
         mdl = fitglm(dsa,modelspec,'Distribution','binomial');
-        mdl.Coefficients.Estimate(2);
-        
+                
         % add expected value to the table and bin values
         T.ev = T.Amount .* T.Probability;
         bin1 = T.ev < prctile(T.ev,10);
@@ -69,7 +68,8 @@ for d = 1:length(domains)
         data_mat(i,1) = subnum;
         data_mat(i,2) = mdl.Coefficients.Estimate(2);
         data_mat(i,3) = mdl.Coefficients.Estimate(3);
-        data_mat(i,4) = mdl.Coefficients.Estimate(4);
+        %data_mat(i,4) = mdl.Coefficients.Estimate(4);
+        data_mat(i,4) = 0;
         for b = 1:10
             data_mat(i,b+4) = mean(T.Choice(T.ev_binned == b));
         end
