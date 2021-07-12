@@ -12,6 +12,8 @@ clear; close all;
 maindir = pwd;
 warning off all
 
+% loop through all participants
+subs = {''};
 
 % first loop through monetary domain, then social
 domains = {'monetary', 'social'};
