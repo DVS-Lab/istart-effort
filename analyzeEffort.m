@@ -107,7 +107,7 @@ for d = 1:length(domains)
     hold on
     er = errorbar(x,choice_mean,choice_se,choice_se);
     er.Color = [0 0 0];
-    hline(.5)
+    %hline(.5)
     ylim(axes1,[0 1]);
     hold off
     xlabel('Expected Value Bin');
