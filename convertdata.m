@@ -218,6 +218,7 @@ for d = 1:length(domains)
         %fclose(fid);
         
         % print domain & subject ID while running
+        
         disp(domain);
         disp(subnum_str);
     end
@@ -238,7 +239,7 @@ keyboard
 %%%%%%%%%%%%%%%%%%% Analyses/plots begin here %%%%%%%%%%%%%%%%%%%
 
 %% t-test: does proportion of hard-task choices overall differ between monetary and social domains?
-[h,p,ci,stats] = ttest(data_mat2(:,3),data_mat2(:,12));
+[h,p,ci,stats] = ttest(data_mat_monetary(:,3),data_mat_social(:,3));
 disp(h);
 disp(p);
 disp(ci);
@@ -246,11 +247,11 @@ disp(stats);
 
 % bar graph
 domain_hard_avgs = [];
-domain_hard_avgs(1,1:2) = [mean(data_mat2(:,3)), mean(data_mat2(:,12))];
+domain_hard_avgs(1,1:2) = [mean(data_mat_monetary(:,3)), mean(data_mat_social(:,3))];
 
 % standard error
-sem1 = std(data_mat2(:,3))/sqrt(length(data_mat2(:,3)));
-sem2 = std(data_mat2(:,12))/sqrt(length(data_mat2(:,12)));
+sem1 = std(data_mat_monetary(:,3))/sqrt(length(data_mat_monetary(:,3)));
+sem2 = std(data_mat_social(:,3))/sqrt(length(data_mat_social(:,3)));
 err = [sem1 sem2];
 
 bar(domain_hard_avgs)
