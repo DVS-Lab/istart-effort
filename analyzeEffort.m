@@ -77,6 +77,23 @@ for d = 1:length(domains)
         end
     end
     
+    % plot hist of betas to be used in log reg
+    figure1 = figure('Name',['Histogram of beta values for Amount: ' domain]);
+    axes1 = axes('Parent',figure1);
+    hold(axes1,'on');
+    histogram(data_mat(:,2))
+    xlabel('Beta Coef');
+    title(['Histogram of beta values for Amount: ' domain]);
+    ylabel('Frequency');
+    
+    figure1 = figure('Name',['Histogram of beta values for Probability: ' domain]);
+    axes1 = axes('Parent',figure1);
+    hold(axes1,'on');
+    histogram(data_mat(:,3))
+    xlabel('Beta Coef');
+    title(['Histogram of beta values for Probability: ' domain]);
+    ylabel('Frequency');
+    
     % plot betas for logistic regression
     betas_mean = mean(data_mat(:,2:4));
     betas_se = std(data_mat(:,2:4))/sqrt(length(data_mat));
