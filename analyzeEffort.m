@@ -12,8 +12,6 @@ clear; close all;
 maindir = pwd;
 warning off all
 
-% loop through all participants
-subs = {''};
 
 % first loop through monetary domain, then social
 domains = {'monetary', 'social'};
@@ -35,17 +33,19 @@ for d = 1:length(domains)
         
         % put data into table
         fname = sourcedata{i};
+        % sub-1007 does not have NULL
         T = readtable(fullfile(sourcedatadir,fname),'TreatAsEmpty','NULL');
         
         % strip out irrelevant information and missed trials
         T = T(:,{'Amount','Choice','Completed','Probability'});
-        goodtrials = T.Choice < 2 & ~isnan(T.Choice);
+        goodtrials = T.Choice < 2 & ~isnan(T.Choice) & T.Amount > 0;
         T = T(goodtrials,:);
         T.zAmount = zscore(T.Amount);
         T.zProbability = zscore(T.Probability);
         
         dsa = T;
-        modelspec = 'Choice ~ zAmount + zProbability';
+        %modelspec = 'Choice ~ zAmount + zProbability';
+        modelspec = 'Choice ~ zAmount*zProbability';
         mdl = fitglm(dsa,modelspec,'Distribution','binomial');
                 
         % add expected value to the table and bin values
@@ -65,34 +65,23 @@ for d = 1:length(domains)
         % extract subject number from file name
         subnum = str2double(fname(3:6));
         
+        %if subnum == 1007 && strcmp(domain,'social')
+        %    keyboard
+        %end
         
         % 14 columns: (sub, beta_amount, beta_prob, beta_ev, ev_bin_choice1-10)
         data_mat(i,1) = subnum;
-        data_mat(i,2) = mdl.Coefficients.Estimate(2);
-        data_mat(i,3) = mdl.Coefficients.Estimate(3);
+        %data_mat(i,2) = mdl.Coefficients.Estimate(2);
+        %data_mat(i,3) = mdl.Coefficients.Estimate(3);
         %data_mat(i,4) = mdl.Coefficients.Estimate(4);
-        data_mat(i,4) = 0;
+        data_mat(i,2) = mdl.Coefficients.tStat(2);
+        data_mat(i,3) = mdl.Coefficients.tStat(3);
+        data_mat(i,4) = mdl.Coefficients.tStat(4);
+        %data_mat(i,4) = 0;
         for b = 1:10
             data_mat(i,b+4) = mean(T.Choice(T.ev_binned == b));
         end
     end
-    
-    % plot hist of betas to be used in log reg
-    figure1 = figure('Name',['Histogram of beta values for Amount: ' domain]);
-    axes1 = axes('Parent',figure1);
-    hold(axes1,'on');
-    histogram(data_mat(:,2))
-    xlabel('Beta Coef');
-    title(['Histogram of beta values for Amount: ' domain]);
-    ylabel('Frequency');
-    
-    figure1 = figure('Name',['Histogram of beta values for Probability: ' domain]);
-    axes1 = axes('Parent',figure1);
-    hold(axes1,'on');
-    histogram(data_mat(:,3))
-    xlabel('Beta Coef');
-    title(['Histogram of beta values for Probability: ' domain]);
-    ylabel('Frequency');
     
     % plot betas for logistic regression
     betas_mean = mean(data_mat(:,2:4));
@@ -109,7 +98,7 @@ for d = 1:length(domains)
     hold off
     xlabel('Condition');
     title(['Logisitic Regression: ' domain ]);
-    ylabel('Beta Coef');
+    ylabel('t-stat');
     set(axes1,'XTick',[1 2 3],'XTickLabel',...
         {'Amount','Probability','Expected Value'});
     
@@ -124,7 +113,7 @@ for d = 1:length(domains)
     hold on
     er = errorbar(x,choice_mean,choice_se,choice_se);
     er.Color = [0 0 0];
-    %hline(.5)
+    hline(.5)
     ylim(axes1,[0 1]);
     hold off
     xlabel('Expected Value Bin');
