@@ -113,14 +113,29 @@ for d = 1:length(domains)
     hold on
     er = errorbar(x,choice_mean,choice_se,choice_se);
     er.Color = [0 0 0];
-    hline(.5)
+    %hline(.5)
     ylim(axes1,[0 1]);
     hold off
     xlabel('Expected Value Bin');
     title(['Effort as function of Expected Value: ' domain ]);
     ylabel('Prop. Accept Hard');
     
+    % compile beta stats, 4 columns: M betas se, M betas mean, S se, S mean
+    if d == 1
+        beta_stats(:,1) = betas_se';
+        beta_stats(:,2) = betas_mean';
+    else
+        beta_stats(:,3) = betas_se';
+        beta_stats(:,4) = betas_mean';
+    end
     
 end
 
-
+% plot both domains together
+beta_stats = beta_stats(1:2,:);
+figure, barwitherr([beta_stats(:,1);beta_stats(:,3)],[beta_stats(:,2);beta_stats(:,4)]);
+xlabel('Condition');
+title('Logisitic Regression');
+ylabel('t-stat');
+set(axes1,'XTick',[1 2],'XTickLabel',...
+    {'Amount','Probability'});
