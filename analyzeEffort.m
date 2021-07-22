@@ -122,20 +122,52 @@ for d = 1:length(domains)
     
     % compile beta stats, 4 columns: M betas se, M betas mean, S se, S mean
     if d == 1
-        beta_stats(:,1) = betas_se';
-        beta_stats(:,2) = betas_mean';
+        betas_se_both(1,1) = betas_se(1,1);
+        betas_se_both(1,3) = betas_se(1,2);
+        %betas_se_both(1,5) = betas_se(1,3);
+        betas_mean_both(1,1) = betas_mean(1,1);
+        betas_mean_both(1,3) = betas_mean(1,2);
+        %betas_mean_both(1,5) = betas_mean(1,3);
     else
-        beta_stats(:,3) = betas_se';
-        beta_stats(:,4) = betas_mean';
+        betas_se_both(1,2) = betas_se(1,1);
+        betas_se_both(1,4) = betas_se(1,2);
+        %betas_se_both(1,6) = betas_se(1,3);
+        betas_mean_both(1,2) = betas_mean(1,1);
+        betas_mean_both(1,4) = betas_mean(1,2);
+        %betas_mean_both(1,6) = betas_mean(1,3);
     end
     
 end
 
-% plot both domains together
-beta_stats = beta_stats(1:2,:);
-figure, barwitherr([beta_stats(:,1);beta_stats(:,3)],[beta_stats(:,2);beta_stats(:,4)]);
+% % plot both domains together
+% beta_stats = beta_stats(1:2,:);
+% figure, barwitherr([beta_stats(:,1);beta_stats(:,3)],[beta_stats(:,2);beta_stats(:,4)]);
+% title('Logisitic Regression');
+% ylabel('t-stat');
+% set(axes1,'XTick',[1 2 3 4],'XTickLabel',...
+%     {'Amount','Probability'});
+
+
+% plot betas for logistic regression
+x = 1:4;
+figure1 = figure('Name','Logistic Regression: ');
+axes1 = axes('Parent',figure1);
+hold(axes1,'on');
+bar(x,betas_mean_both)
+hold on
+er = errorbar(x,betas_mean_both,betas_se_both,betas_se_both);
+er.Color = [0 0 0];
+er.LineStyle = 'none';
+hold off
 xlabel('Condition');
-title('Logisitic Regression');
+title('Logisitic Regression: both domains');
 ylabel('t-stat');
-set(axes1,'XTick',[1 2],'XTickLabel',...
-    {'Amount','Probability'});
+set(axes1,'XTick',[1 2 3 4],'XTickLabel',...
+    {'Monetary Amount','Social Amount','Monetary Probability','Social Probability'});
+% figure1(1).FaceColor = 'r';
+% figure1(2).FaceColor = 'b';
+% figure1(3).FaceColor = 'r';
+% figure1(4).FaceColor = 'b';
+% figure1(5).FaceColor = 'r';
+% figure1(6).FaceColor = 'b';
+
