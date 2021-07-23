@@ -470,7 +470,16 @@ disp(P);
 
 %% Scatterplots for proportion of hard-task choices and BDI / BSMAS for each domain
 
+% build path for data and create list of files
+BDIdir = fullfile(maindir,'data');
+BDIdata = dir([BDIdir '/BDI*.xls*']);
+BDIdata = struct2cell(BDIdata);
+BDIdata = BDIdata(1,1:end);
 
+f2name = BDIdata{1};
+survey_data = readmatrix(fullfile(maindir,'data/BDI&BMSMAS.xlsx'));
+BDI = survey_data(:,2);
+BSMAS = survey_data(:,3);
 
 
 %% plotting prop of hard choices for each reward magnitude, non-binned
