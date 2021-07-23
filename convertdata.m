@@ -268,34 +268,63 @@ er.LineStyle = 'none';
 hold off
 
 %% anova: does proportion of hard-task choices differ by reward probability?
-% monetary
-money_prob = data_mat_m(:,4:6);
-[~,~,~] = anova1(money_prob);
-
-% monetary bar graph
-money_prob_avgs = [];
-money_prob_avgs(1,1:3) = [mean(money_prob(:,1)), mean(money_prob(:,2)), mean(money_prob(:,3))];
-figure;
-bar(money_prob_avgs)
-title('Proportion of hard-task choices per reward probability in the monetary domain')
-ylabel('proportion of hard-task choices')
-xlabel('12% (1)   50% (2)   88% (3)')
-ylim([0 .7]);
-
-% social
-social_prob = data_mat_s(:,4:6);
+% Social
+social_prob = data_mat_social(:,4:6);
 [~,~,~] = anova1(social_prob);
 
-% social bar graph
 social_prob_avgs = [];
 social_prob_avgs(1,1:3) = [nanmean(social_prob(:,1)), nanmean(social_prob(:,2)), nanmean(social_prob(:,3))];
-figure;
-bar(social_prob_avgs)
-title('Proportion of hard-task choices per reward probability in the social domain')
-ylabel('proportion of hard-task choices')
-xlabel('12% (1)   50% (2)   88% (3)')
-ylim([0 .7]);
 
+% standard error
+sem(1,1) = std(social_prob(:,1))/sqrt(length(social_prob(:,1)));
+sem(1,2) = std(social_prob(:,2))/sqrt(length(social_prob(:,2)));
+sem(1,3) = std(social_prob(:,3))/sqrt(length(social_prob(:,3)));
+
+x = 1:3;
+figure1 = figure('Name','Proportion of hard-task choices by reward probability: Social');
+axes1 = axes('Parent',figure1);
+hold(axes1,'on');
+bar(x,social_prob_avgs)
+hold on
+er = errorbar(x,social_prob_avgs,sem,sem);
+er.Color = [0 0 0];
+er.LineStyle = 'none';
+hold off
+xlabel('Reward Probability');
+title('Proportion of hard-task choices by reward probability: Social');
+ylabel('Proportion of hard-task choices');
+ylim([0 .7]);
+set(axes1,'XTick',[1 2 3],'XTickLabel',...
+    {'12%','50%','88%'});
+
+% Monetary
+money_prob = data_mat_monetary(:,4:6);
+money_prob_avgs = [];
+money_prob_avgs(1,1:3) = [mean(money_prob(:,1)), mean(money_prob(:,2)), mean(money_prob(:,3))];
+
+% standard error
+sem(1,1) = std(money_prob(:,1))/sqrt(length(money_prob(:,1)));
+sem(1,2) = std(money_prob(:,2))/sqrt(length(money_prob(:,2)));
+sem(1,3) = std(money_prob(:,3))/sqrt(length(money_prob(:,3)));
+
+x = 1:3;
+figure1 = figure('Name','Proportion of hard-task choices by reward probability: Monetary');
+axes1 = axes('Parent',figure1);
+hold(axes1,'on');
+bar(x,money_prob_avgs)
+hold on
+er = errorbar(x,money_prob_avgs,sem,sem);
+er.Color = [0 0 0];
+er.LineStyle = 'none';
+hold off
+xlabel('Reward Probability');
+title('Proportion of hard-task choices by reward probability: Monetary');
+ylabel('Proportion of hard-task choices');
+ylim([0 .7]);
+set(axes1,'XTick',[1 2 3],'XTickLabel',...
+    {'12%','50%','88%'});
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % monetary and social together
 money_prob2 = data_mat_m2(:,4:6);
 total_prob = [money_prob2 social_prob];
