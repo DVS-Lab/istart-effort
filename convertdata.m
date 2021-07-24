@@ -253,7 +253,7 @@ domain_hard_avgs(1,1:2) = [mean(data_mat_monetary(:,3)), mean(data_mat_social(:,
 sem(1,1) = std(data_mat_monetary(:,3))/sqrt(length(data_mat_monetary(:,3)));
 sem(1,2) = std(data_mat_social(:,3))/sqrt(length(data_mat_social(:,3)));
 x = 1:2;
-figure1 = figure('Name','Proportion of hard-task choices between domains');
+figure1 = figure('Name','Greater Effort in Monetary Domain');
 axes1 = axes('Parent',figure1);
 hold(axes1,'on');
 bar(x,domain_hard_avgs)
@@ -263,7 +263,7 @@ er.Color = [0 0 0];
 er.LineStyle = 'none';
 hold off
 xlabel('Domain');
-title('Proportion of hard-task choices between Domains');
+title('Greater Effort in Monetary Domain');
 ylabel('Proportion of hard-task choices');
 set(axes1,'XTick',[1 2],'XTickLabel',...
     {'Monetary', 'Social'});
@@ -281,7 +281,7 @@ sem(1,1) = std(social_prob(:,1))/sqrt(length(social_prob(:,1)));
 sem(1,2) = std(social_prob(:,2))/sqrt(length(social_prob(:,2)));
 sem(1,3) = std(social_prob(:,3))/sqrt(length(social_prob(:,3)));
 x = 1:3;
-figure1 = figure('Name','Proportion of hard-task choices by reward probability: Social');
+figure1 = figure('Name','Effort Increases with Reward Probability in the Social Domain');
 axes1 = axes('Parent',figure1);
 hold(axes1,'on');
 bar(x,social_prob_avgs)
@@ -291,7 +291,7 @@ er.Color = [0 0 0];
 er.LineStyle = 'none';
 hold off
 xlabel('Reward Probability');
-title('Proportion of hard-task choices by reward probability: Social');
+title('Effort Increases with Reward Probability in the Social Domain');
 ylabel('Proportion of hard-task choices');
 ylim([0 .7]);
 set(axes1,'XTick',[1 2 3],'XTickLabel',...
@@ -306,7 +306,7 @@ sem(1,1) = std(money_prob(:,1))/sqrt(length(money_prob(:,1)));
 sem(1,2) = std(money_prob(:,2))/sqrt(length(money_prob(:,2)));
 sem(1,3) = std(money_prob(:,3))/sqrt(length(money_prob(:,3)));
 x = 1:3;
-figure1 = figure('Name','Proportion of hard-task choices by reward probability: Monetary');
+figure1 = figure('Name','Effort Increases with Reward Probability in the Monetary Domain');
 axes1 = axes('Parent',figure1);
 hold(axes1,'on');
 bar(x,money_prob_avgs)
@@ -316,7 +316,7 @@ er.Color = [0 0 0];
 er.LineStyle = 'none';
 hold off
 xlabel('Reward Probability');
-title('Proportion of hard-task choices by reward probability: Monetary');
+title('Effort Increases with Reward Probability in the Monetary Domain');
 ylabel('Proportion of hard-task choices');
 ylim([0 .7]);
 set(axes1,'XTick',[1 2 3],'XTickLabel',...
@@ -349,7 +349,7 @@ sem(1,1) = std(money_mag(:,1))/sqrt(length(money_mag(:,1)));
 sem(1,2) = std(money_mag(:,2))/sqrt(length(money_mag(:,2)));
 sem(1,3) = std(money_mag(:,3))/sqrt(length(money_mag(:,3)));
 x = 1:3;
-figure1 = figure('Name','Proportion of hard-task choices by reward magnitude: Monetary');
+figure1 = figure('Name','Effort Increases with Reward Magnitude in the Monetary Domain');
 axes1 = axes('Parent',figure1);
 hold(axes1,'on');
 bar(x,money_mag_avgs)
@@ -359,7 +359,7 @@ er.Color = [0 0 0];
 er.LineStyle = 'none';
 hold off
 xlabel('Reward Magnitude');
-title('Proportion of hard-task choices by reward magnitude: Monetary');
+title('Effort Increases with Reward Magnitude in the Monetary Domain');
 ylabel('Proportion of hard-task choices');
 ylim([0 .7]);
 set(axes1,'XTick',[1 2 3],'XTickLabel',...
@@ -374,7 +374,7 @@ sem(1,1) = nanstd(social_mag(:,1))/sqrt(length(social_mag(:,1)));
 sem(1,2) = nanstd(social_mag(:,2))/sqrt(length(social_mag(:,2)));
 sem(1,3) = nanstd(social_mag(:,3))/sqrt(length(social_mag(:,3)));
 x = 1:3;
-figure1 = figure('Name','Proportion of hard-task choices by reward magnitude: Social');
+figure1 = figure('Name','No Relationship between Effort and Reward Magnitude in the Social Domain');
 axes1 = axes('Parent',figure1);
 hold(axes1,'on');
 bar(x,social_mag_avgs)
@@ -384,7 +384,7 @@ er.Color = [0 0 0];
 er.LineStyle = 'none';
 hold off
 xlabel('Reward Magnitude');
-title('Proportion of hard-task choices by reward magnitude: Social');
+title('No Relationship between Effort and Reward Magnitude in the Social Domain');
 ylabel('Proportion of hard-task choices');
 ylim([0 .7]);
 set(axes1,'XTick',[1 2 3],'XTickLabel',...
