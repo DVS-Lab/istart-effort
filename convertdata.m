@@ -207,20 +207,8 @@ for d = 1:length(domains)
             end
         end
         
-        %keyboard
-        
-        % build output file with header
-        %outname = [subnum_str '_' condition_str '.csv'];
-        %outfile = fullfile(maindir,'data',outname);
-        %cHeader = 'subject,trial,response,reward,trial_type,accuracy';
-        %fid = fopen(outfile,'w');
-        %fprintf(fid,'%s\n',cHeader);
-        %fclose(fid);
-        
-        % print domain & subject ID while running
-        
-        disp(domain);
-        disp(subnum_str);
+        %disp(domain);
+        %disp(subnum_str);
     end
 end
   
@@ -439,94 +427,92 @@ disp(r(2,1));
 disp(p(2,1));
 
 
-
-keyboard
 % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
 % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
 % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
 % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
 % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
-%% plotting prop of hard choices for each expected value, non-binned
-
-fontSize1 = 18;
-fontSize2 = 15;
-
-% monetary
-ev_data_monetary(1:4,:) = []; % remove practice trials
-
-% create df with two columns: ev & proportion of hard task choices
-ev_probs_monetary = ev_data_monetary(:,1:2);
-for l = 1:length(ev_data_monetary(:,1))
-    ev_probs_monetary(l,1)=ev_data_monetary(l,1);
-    ev_probs_monetary(l,2)=nanmean(ev_data_monetary(l,2:length(ev_data_monetary(1,:))));
-end 
-ev_probs_monetary = sortrows(ev_probs_monetary);
-
-% plot
-figure;
-plot(ev_probs_monetary(:,1),ev_probs_monetary(:,2))
-title('Proportion of hard-task choices for each expected value in the monetary domain', 'FontSize', fontSize1)
-xlabel('Expected Value (dollars)', 'FontSize', fontSize2)
-ylabel('Proportion of hard-task choices', 'FontSize', fontSize2);
-
-[R,P] = corrcoef(ev_probs_monetary);
-disp(R);
-disp(P);
-
-% social
-ev_data_social(1:4,:) = []; % remove practice trials
-
-% create df with two columns: ev & proportion of hard task choices
-ev_probs_social = ev_data_social(:,1:2);
-for l = 1:length(ev_data_social(:,1))
-    ev_probs_social(l,1)=ev_data_social(l,1);
-    ev_probs_social(l,2)=nanmean(ev_data_social(l,2:length(ev_data_social(1,:))));
-end 
-ev_probs_social = sortrows(ev_probs_social);
-
-% plot
-figure;
-plot(ev_probs_social(:,1),ev_probs_social(:,2))
-title('Proportion of hard-task choices for each expected value in the social domain', 'FontSize', fontSize1)
-xlabel('Expected Value (minutes of social media time)', 'FontSize', fontSize2)
-ylabel('Proportion of hard-task choices', 'FontSize', fontSize2);
-
-[R,P] = corrcoef(ev_probs_social);
-disp(R);
-disp(P);
-
-
-
-
-%% plotting prop of hard choices for each reward magnitude, non-binned
-
-% NOTE: reward values get shown multiple times (i.e., the same value will
-% appear in column 1 of reward_probs more than once), need to find a way to
-% combine those, probably need to go back to the data file and sort before
-% doing any of the matrix stuff in the main script above
-
-%monetary
-reward_data_monetary(1:4,:) = [];
-
-reward_probs_monetary = reward_data_monetary(:,1:2);
-for l = 1:length(reward_data_monetary(:,1))
-    reward_probs_monetary(l,1)=reward_data_monetary(l,1);
-    reward_probs_monetary(l,2)=nanmean(reward_data_monetary(l,2:length(reward_data_monetary(1,:))));
-end 
-reward_probs_monetary = sortrows(reward_probs_monetary);
-
-% social
-reward_data_social(1:4,:) = [];
-
-reward_probs_social = reward_data_social(:,1:2);
-for l = 1:length(reward_data_social(:,1))
-    reward_probs_social(l,1)=reward_data_social(l,1);
-    reward_probs_social(l,2)=nanmean(reward_data_social(l,2:length(reward_data_social(1,:))));
-end 
-reward_probs_social = sortrows(reward_probs_social);
-
-%%
-
-%plot(data_mat_m(:,7), data_mat_m(:,3));
-% dlmwrite('indata_hBayesDM.tsv',datahb,'delimiter','\t','-append');
+% %% plotting prop of hard choices for each expected value, non-binned
+% 
+% fontSize1 = 18;
+% fontSize2 = 15;
+% 
+% % monetary
+% ev_data_monetary(1:4,:) = []; % remove practice trials
+% 
+% % create df with two columns: ev & proportion of hard task choices
+% ev_probs_monetary = ev_data_monetary(:,1:2);
+% for l = 1:length(ev_data_monetary(:,1))
+%     ev_probs_monetary(l,1)=ev_data_monetary(l,1);
+%     ev_probs_monetary(l,2)=nanmean(ev_data_monetary(l,2:length(ev_data_monetary(1,:))));
+% end 
+% ev_probs_monetary = sortrows(ev_probs_monetary);
+% 
+% % plot
+% figure;
+% plot(ev_probs_monetary(:,1),ev_probs_monetary(:,2))
+% title('Proportion of hard-task choices for each expected value in the monetary domain', 'FontSize', fontSize1)
+% xlabel('Expected Value (dollars)', 'FontSize', fontSize2)
+% ylabel('Proportion of hard-task choices', 'FontSize', fontSize2);
+% 
+% [R,P] = corrcoef(ev_probs_monetary);
+% disp(R);
+% disp(P);
+% 
+% % social
+% ev_data_social(1:4,:) = []; % remove practice trials
+% 
+% % create df with two columns: ev & proportion of hard task choices
+% ev_probs_social = ev_data_social(:,1:2);
+% for l = 1:length(ev_data_social(:,1))
+%     ev_probs_social(l,1)=ev_data_social(l,1);
+%     ev_probs_social(l,2)=nanmean(ev_data_social(l,2:length(ev_data_social(1,:))));
+% end 
+% ev_probs_social = sortrows(ev_probs_social);
+% 
+% % plot
+% figure;
+% plot(ev_probs_social(:,1),ev_probs_social(:,2))
+% title('Proportion of hard-task choices for each expected value in the social domain', 'FontSize', fontSize1)
+% xlabel('Expected Value (minutes of social media time)', 'FontSize', fontSize2)
+% ylabel('Proportion of hard-task choices', 'FontSize', fontSize2);
+% 
+% [R,P] = corrcoef(ev_probs_social);
+% disp(R);
+% disp(P);
+% 
+% 
+% 
+% 
+% %% plotting prop of hard choices for each reward magnitude, non-binned
+% 
+% % NOTE: reward values get shown multiple times (i.e., the same value will
+% % appear in column 1 of reward_probs more than once), need to find a way to
+% % combine those, probably need to go back to the data file and sort before
+% % doing any of the matrix stuff in the main script above
+% 
+% %monetary
+% reward_data_monetary(1:4,:) = [];
+% 
+% reward_probs_monetary = reward_data_monetary(:,1:2);
+% for l = 1:length(reward_data_monetary(:,1))
+%     reward_probs_monetary(l,1)=reward_data_monetary(l,1);
+%     reward_probs_monetary(l,2)=nanmean(reward_data_monetary(l,2:length(reward_data_monetary(1,:))));
+% end 
+% reward_probs_monetary = sortrows(reward_probs_monetary);
+% 
+% % social
+% reward_data_social(1:4,:) = [];
+% 
+% reward_probs_social = reward_data_social(:,1:2);
+% for l = 1:length(reward_data_social(:,1))
+%     reward_probs_social(l,1)=reward_data_social(l,1);
+%     reward_probs_social(l,2)=nanmean(reward_data_social(l,2:length(reward_data_social(1,:))));
+% end 
+% reward_probs_social = sortrows(reward_probs_social);
+% 
+% %%
+% 
+% %plot(data_mat_m(:,7), data_mat_m(:,3));
+% % dlmwrite('indata_hBayesDM.tsv',datahb,'delimiter','\t','-append');
 
