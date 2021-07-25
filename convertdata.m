@@ -375,33 +375,46 @@ BSMAS = survey_data(:,3);
 x = BDI;
 y1 = data_mat_monetary(:,3);
 y2 = data_mat_social(:,3);
-data_mat_grouped = zeros(30:2);
-data_mat_grouped(1:15,1) = 1;
-data_mat_grouped(16:30,1) = 2;
-data_mat_grouped(1:15,2) = data_mat_monetary(:,3);
-data_mat_grouped(16:30,2) = data_mat_social(:,3);
 
-
-% scatterplot
-figure1 = figure('Name','Negative Relationship between BDI and Effort in Monetary Domain');
+% scatterplot for BDI
+figure1 = figure('Name','Negative Relationship between Depression and Effort in Monetary Domain');
 axes1 = axes('Parent',figure1);
 hold(axes1,'on');
-scatter(x1,y1,'filled',color('g'));
-scatter(x2,y2,'filled');
+p1 = polyfit(BDI,y1,1);
+p2 = polyfit(BDI,y2,1);
+px = [min(BDI) max(BDI)];
+py1 = polyval(p1,px);
+py2 = polyval(p2,px);
+
+scatter(BDI,y1,'filled','g');
+hold on
+plot(px,py1,'LineWidth',2,'Color','g');
+scatter(BDI,y2,'filled','b');
+plot(px,py2,'LineWidth',2,'Color','b');
+hold off
 xlabel('BDI Score');
-title('BDI and total hard-task choices');
+title('Negative Relationship between Depression and Effort in Monetary Domain');
 ylabel('Proportion of hard-task choices');
 
-fig1 = scatter(x,y,'filled');
-fig1;
-
-figure1 = figure('Name','BSMAS and total hard-task choices: Monetary');
+% NEED TO FINALIZE THESE TRENDLINES!
+% scatterplot for BSMAS
+figure1 = figure('Name','Negative Relationship between Social Media Addiction and Effort in Monetary Domain');
 axes1 = axes('Parent',figure1);
 hold(axes1,'on');
-scatter(x,y,'filled')
+p1 = polyfit(BSMAS,y1,1);
+p2 = polyfit(BSMAS,y2,1);
+px = [min(BSMAS) max(BSMAS)];
+py1 = polyval(p1,px);
+py2 = polyval(p2,px);
+scatter(BSMAS,y1,'filled','g');
+plot(px,py1,'LineWidth',2,'Color','g');
+scatter(BSMAS,y2,'filled','b');
+plot(px,py2,'LineWidth',2,'Color','b');
 xlabel('BSMAS Score');
-title('BSMAS and total hard-task choices: Monetary');
+title('Negative Relationship between Social Media Addiction and Effort in Monetary Domain');
 ylabel('Proportion of hard-task choices');
+
+
 
 
 
