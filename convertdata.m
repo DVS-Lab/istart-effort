@@ -240,23 +240,20 @@ keyboard
 %%%%%%%%%%%%%%%%%%% Analyses/plots begin here %%%%%%%%%%%%%%%%%%%
 
 %% t-test: does proportion of hard-task choices overall differ between monetary and social domains?
-[h,p,ci,stats] = ttest(data_mat_monetary(:,3),data_mat_social(:,3));
-disp(h);
-disp(p);
-disp(ci);
-disp(stats);
 
-%bar graph
+% organize data
 domain_hard_avgs = [];
 domain_hard_avgs(1,1:2) = [mean(data_mat_monetary(:,3)), mean(data_mat_social(:,3))];
-% standard error
 sem(1,1) = std(data_mat_monetary(:,3))/sqrt(length(data_mat_monetary(:,3)));
 sem(1,2) = std(data_mat_social(:,3))/sqrt(length(data_mat_social(:,3)));
 x = 1:2;
+
+% bar graph
 figure1 = figure('Name','Greater Effort in Monetary Domain');
 axes1 = axes('Parent',figure1);
 hold(axes1,'on');
-bar(x,domain_hard_avgs)
+bar(x(1,1),domain_hard_avgs(1,1),'FaceColor','g');
+bar(x(1,2), domain_hard_avgs(1,2),'FaceColor','b');
 hold on
 er = errorbar(x,domain_hard_avgs,sem,sem);
 er.Color = [0 0 0];
@@ -268,157 +265,152 @@ ylabel('Proportion of hard-task choices');
 set(axes1,'XTick',[1 2],'XTickLabel',...
     {'Monetary', 'Social'});
 
+% stats
+[h,p,ci,stats] = ttest(data_mat_monetary(:,3),data_mat_social(:,3));
+disp(h);
+disp(p);
+disp(ci);
+disp(stats);
 
 %% anova: does proportion of hard-task choices differ by reward probability?
-% Social
-social_prob = data_mat_social(:,4:6);
-[~,~,~] = anova1(social_prob);
 
-social_prob_avgs = [];
-social_prob_avgs(1,1:3) = [nanmean(social_prob(:,1)), nanmean(social_prob(:,2)), nanmean(social_prob(:,3))];
-% standard error
-sem(1,1) = std(social_prob(:,1))/sqrt(length(social_prob(:,1)));
-sem(1,2) = std(social_prob(:,2))/sqrt(length(social_prob(:,2)));
-sem(1,3) = std(social_prob(:,3))/sqrt(length(social_prob(:,3)));
-x = 1:3;
-figure1 = figure('Name','Effort Increases with Reward Probability in the Social Domain');
-axes1 = axes('Parent',figure1);
-hold(axes1,'on');
-bar(x,social_prob_avgs)
-hold on
-er = errorbar(x,social_prob_avgs,sem,sem);
-er.Color = [0 0 0];
-er.LineStyle = 'none';
-hold off
-xlabel('Reward Probability');
-title('Effort Increases with Reward Probability in the Social Domain');
-ylabel('Proportion of hard-task choices');
-ylim([0 .7]);
-set(axes1,'XTick',[1 2 3],'XTickLabel',...
-    {'12%','50%','88%'});
-
-% Monetary
+% organize data
 money_prob = data_mat_monetary(:,4:6);
 money_prob_avgs = [];
-money_prob_avgs(1,1:3) = [mean(money_prob(:,1)), mean(money_prob(:,2)), mean(money_prob(:,3))];
-% standard error
-sem(1,1) = std(money_prob(:,1))/sqrt(length(money_prob(:,1)));
-sem(1,2) = std(money_prob(:,2))/sqrt(length(money_prob(:,2)));
-sem(1,3) = std(money_prob(:,3))/sqrt(length(money_prob(:,3)));
-x = 1:3;
-figure1 = figure('Name','Effort Increases with Reward Probability in the Monetary Domain');
+prob_avgs(1,1) = mean(money_prob(:,1));
+prob_avgs(1,3) = mean(money_prob(:,2));
+prob_avgs(1,5) = mean(money_prob(:,3));
+social_prob = data_mat_social(:,4:6);
+social_prob_avgs = [];
+prob_avgs(1,2) = nanmean(social_prob(:,1));
+prob_avgs(1,4) = nanmean(social_prob(:,2));
+prob_avgs(1,6) = nanmean(social_prob(:,3));
+
+sem(1,1) = std(social_prob(:,1))/sqrt(length(social_prob(:,1)));
+sem(1,3) = std(social_prob(:,2))/sqrt(length(social_prob(:,2)));
+sem(1,5) = std(social_prob(:,3))/sqrt(length(social_prob(:,3)));
+sem(1,2) = std(social_prob(:,1))/sqrt(length(social_prob(:,1)));
+sem(1,4) = std(social_prob(:,2))/sqrt(length(social_prob(:,2)));
+sem(1,6) = std(social_prob(:,3))/sqrt(length(social_prob(:,3)));
+
+% bar graph
+x = 1:6;
+figure1 = figure('Name','Greater Impact of Probability in Monetary Domain');
 axes1 = axes('Parent',figure1);
 hold(axes1,'on');
-bar(x,money_prob_avgs)
+bar(x(1,1), prob_avgs(1,1),'FaceColor','g');
+bar(x(1,2), prob_avgs(1,2),'FaceColor','b');
+bar(x(1,3), prob_avgs(1,3),'FaceColor','g');
+bar(x(1,4), prob_avgs(1,4),'FaceColor','b');
+bar(x(1,5), prob_avgs(1,5),'FaceColor','g');
+bar(x(1,6), prob_avgs(1,6),'FaceColor','b');
 hold on
-er = errorbar(x,money_prob_avgs,sem,sem);
+er = errorbar(x,prob_avgs,sem,sem);
 er.Color = [0 0 0];
 er.LineStyle = 'none';
 hold off
-xlabel('Reward Probability');
-title('Effort Increases with Reward Probability in the Monetary Domain');
+xlabel('Probability');
+title('Greater Impact of Probability in Monetary Domain');
 ylabel('Proportion of hard-task choices');
-ylim([0 .7]);
-set(axes1,'XTick',[1 2 3],'XTickLabel',...
-    {'12%','50%','88%'});
+set(axes1,'XTick',[1 2 3 4 5 6],'XTickLabel',...
+    {'12% Mon', '12% Soc', '50% Mon', '50% Soc', '88% Mon', '88% Soc'});
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% monetary and social together
-money_prob2 = data_mat_m2(:,4:6);
-total_prob = [money_prob2 social_prob];
-[~,~,~] = anova1(total_prob);
-
-total_prob_avgs = [money_prob_avgs social_prob_avgs];
-figure;
-bar(total_prob_avgs)
-title('Proportion of hard-task choices per reward probability in both domains')
-ylabel('proportion of hard-task choices')
-xlabel('M12% (1)   M50% (2)   M88% (3)   S12% (4)   S50% (5)   S88% (6)');
+% stats
+[~,~,~] = anova1(money_prob);
+[~,~,~] = anova1(social_prob);
 
 %% anova: does proportion of hard-task choices differ by reward magnitude?
-% monetary
-money_mag = data_mat_monetary(:,7:9);
-[~,~,~] = anova1(money_mag);
 
-% Monetary
+% organize data
 money_mag = data_mat_monetary(:,7:9);
 money_mag_avgs = [];
-money_mag_avgs(1,1:3) = [mean(money_mag(:,1)), mean(money_mag(:,2)), mean(money_mag(:,3))];
-% standard error
-sem(1,1) = std(money_mag(:,1))/sqrt(length(money_mag(:,1)));
-sem(1,2) = std(money_mag(:,2))/sqrt(length(money_mag(:,2)));
-sem(1,3) = std(money_mag(:,3))/sqrt(length(money_mag(:,3)));
-x = 1:3;
-figure1 = figure('Name','Effort Increases with Reward Magnitude in the Monetary Domain');
-axes1 = axes('Parent',figure1);
-hold(axes1,'on');
-bar(x,money_mag_avgs)
-hold on
-er = errorbar(x,money_mag_avgs,sem,sem);
-er.Color = [0 0 0];
-er.LineStyle = 'none';
-hold off
-xlabel('Reward Magnitude');
-title('Effort Increases with Reward Magnitude in the Monetary Domain');
-ylabel('Proportion of hard-task choices');
-ylim([0 .7]);
-set(axes1,'XTick',[1 2 3],'XTickLabel',...
-    {'Low','Medium','High'});
-
-% social
-social_mag = data_mat_social(:,7:9);
+mag_avgs(1,1) = mean(money_mag(:,1));
+mag_avgs(1,3) = mean(money_mag(:,2));
+mag_avgs(1,5) = mean(money_mag(:,3));
+social_mag = data_mat_social(:,4:6);
 social_mag_avgs = [];
-social_mag_avgs(1,1:3) = [nanmean(social_mag(:,1)), nanmean(social_mag(:,2)), nanmean(social_mag(:,3))];
-% standard error
-sem(1,1) = nanstd(social_mag(:,1))/sqrt(length(social_mag(:,1)));
-sem(1,2) = nanstd(social_mag(:,2))/sqrt(length(social_mag(:,2)));
-sem(1,3) = nanstd(social_mag(:,3))/sqrt(length(social_mag(:,3)));
-x = 1:3;
-figure1 = figure('Name','No Relationship between Effort and Reward Magnitude in the Social Domain');
+mag_avgs(1,2) = nanmean(social_mag(:,1));
+mag_avgs(1,4) = nanmean(social_mag(:,2));
+mag_avgs(1,6) = nanmean(social_mag(:,3));
+
+sem(1,1) = std(social_mag(:,1))/sqrt(length(social_mag(:,1)));
+sem(1,3) = std(social_mag(:,2))/sqrt(length(social_mag(:,2)));
+sem(1,5) = std(social_mag(:,3))/sqrt(length(social_mag(:,3)));
+sem(1,2) = std(social_mag(:,1))/sqrt(length(social_mag(:,1)));
+sem(1,4) = std(social_mag(:,2))/sqrt(length(social_mag(:,2)));
+sem(1,6) = std(social_mag(:,3))/sqrt(length(social_mag(:,3)));
+
+% bar graph
+x = 1:6;
+figure1 = figure('Name','Greater Impact of Reward Magnitude in Monetary Domain');
 axes1 = axes('Parent',figure1);
 hold(axes1,'on');
-bar(x,social_mag_avgs)
+bar(x(1,1), mag_avgs(1,1),'FaceColor','g');
+bar(x(1,2), mag_avgs(1,2),'FaceColor','b');
+bar(x(1,3), mag_avgs(1,3),'FaceColor','g');
+bar(x(1,4), mag_avgs(1,4),'FaceColor','b');
+bar(x(1,5), mag_avgs(1,5),'FaceColor','g');
+bar(x(1,6), mag_avgs(1,6),'FaceColor','b');
 hold on
-er = errorbar(x,social_mag_avgs,sem,sem);
+er = errorbar(x,mag_avgs,sem,sem);
 er.Color = [0 0 0];
 er.LineStyle = 'none';
 hold off
 xlabel('Reward Magnitude');
-title('No Relationship between Effort and Reward Magnitude in the Social Domain');
+title('Greater Impact of Reward Magnitude in Monetary Domain');
 ylabel('Proportion of hard-task choices');
-ylim([0 .7]);
-set(axes1,'XTick',[1 2 3],'XTickLabel',...
-    {'Low','Medium','High'});
+set(axes1,'XTick',[1 2 3 4 5 6],'XTickLabel',...
+    {'Low Mon', 'Low Soc', 'Med Mon', 'Med Soc', 'High Mon', 'High Soc'});
 
-social_mag = data_mat_s(:,7:9);
-social_mag(any(isnan(social_mag),1),:) = [];
+% stats
+[~,~,~] = anova1(money_mag);
 [p,tbl,stats] = anova1(social_mag);
 
-% social bar graph
-social_mag_avgs = [];
-social_mag_avgs(1,1:3) = [nanmean(social_mag(:,1)), nanmean(social_mag(:,2)), nanmean(social_mag(:,3))];
+%% Scatterplots for proportion of hard-task choices and BDI / BSMAS for each domain
 
-% standard error
-sem1 = nanstd(social_mag(:,1))/sqrt(length(social_mag(:,1)));
-sem2 = nanstd(social_mag(:,2))/sqrt(length(social_mag(:,2)));
-sem3 = nanstd(social_mag(:,3))/sqrt(length(social_mag(:,3)));
-err = [sem1 sem2 sem3];
+% organize data
+survey_data = readmatrix(fullfile(maindir,'data/BDI&BSMAS.xlsx'));
+BDI = survey_data(:,2);
+BSMAS = survey_data(:,3);
+x = BDI;
+y1 = data_mat_monetary(:,3);
+y2 = data_mat_social(:,3);
+data_mat_grouped = zeros(30:2);
+data_mat_grouped(1:15,1) = 1;
+data_mat_grouped(16:30,1) = 2;
+data_mat_grouped(1:15,2) = data_mat_monetary(:,3);
+data_mat_grouped(16:30,2) = data_mat_social(:,3);
 
-figure;
-bar(social_mag_avgs)
-title('Proportion of hard-task choices per reward magnitude in the social domain')
-ylabel('proportion of hard-task choices')
-xlabel('low reward (1)   mid reward (2)   high reward (3)')
-ylim([0 .7])
 
-hold on
+% scatterplot
+figure1 = figure('Name','Negative Relationship between BDI and Effort in Monetary Domain');
+axes1 = axes('Parent',figure1);
+hold(axes1,'on');
+scatter(x1,y1,'filled',color('g'));
+scatter(x2,y2,'filled');
+xlabel('BDI Score');
+title('BDI and total hard-task choices');
+ylabel('Proportion of hard-task choices');
 
-er = errorbar(social_mag_avgs,err);
-er.Color = [0 0 0];
-er.LineStyle = 'none';
+fig1 = scatter(x,y,'filled');
+fig1;
 
-hold off
+figure1 = figure('Name','BSMAS and total hard-task choices: Monetary');
+axes1 = axes('Parent',figure1);
+hold(axes1,'on');
+scatter(x,y,'filled')
+xlabel('BSMAS Score');
+title('BSMAS and total hard-task choices: Monetary');
+ylabel('Proportion of hard-task choices');
 
+
+
+keyboard
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
 %% plotting prop of hard choices for each expected value, non-binned
 
 fontSize1 = 18;
@@ -468,26 +460,7 @@ ylabel('Proportion of hard-task choices', 'FontSize', fontSize2);
 disp(R);
 disp(P);
 
-%% Scatterplots for proportion of hard-task choices and BDI / BSMAS for each domain
 
-% build path for data and create list of files
-survey_data = readmatrix(fullfile(maindir,'data/BDI&BSMAS.xlsx'));
-BDI = survey_data(:,2);
-BSMAS = survey_data(:,3);
-
-x = BSMAS;
-y = data_mat_monetary(:,3);
-
-fig1 = scatter(x,y,'filled');
-fig1;
-
-figure1 = figure('Name','BSMAS and total hard-task choices: Monetary');
-axes1 = axes('Parent',figure1);
-hold(axes1,'on');
-scatter(x,y,'filled')
-xlabel('BSMAS Score');
-title('BSMAS and total hard-task choices: Monetary');
-ylabel('Proportion of hard-task choices');
 
 
 %% plotting prop of hard choices for each reward magnitude, non-binned
