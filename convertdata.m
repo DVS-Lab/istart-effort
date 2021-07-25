@@ -233,9 +233,7 @@ data_mat_monetary(4,:) = []; %removes sub 1004
 data_mat_monetary = data_mat_monetary(1:15,:);
 data_mat = [data_mat_monetary(1:15,:) data_mat_social];
 
-writematrix(data_mat, 'data_mat.csv');
-
-keyboard 
+writematrix(data_mat, 'data_mat.csv'); 
 
 %%%%%%%%%%%%%%%%%%% Analyses/plots begin here %%%%%%%%%%%%%%%%%%%
 
@@ -364,7 +362,7 @@ set(axes1,'XTick',[1 2 3 4 5 6],'XTickLabel',...
 
 % stats
 [~,~,~] = anova1(money_mag);
-[p,tbl,stats] = anova1(social_mag);
+[~,tbl,stats] = anova1(social_mag);
 
 %% Scatterplots for proportion of hard-task choices and BDI / BSMAS for each domain
 
@@ -394,6 +392,16 @@ xlabel('BDI Score');
 title('Negative Relationship between Depression and Effort in Monetary Domain');
 ylabel('Proportion of hard-task choices');
 
+% stats
+% BDI and effort: monetary domain
+[r,p] = corrcoef(BDI,y1);
+disp(r(2,1));
+disp(p(2,1));
+% BDI and effort: social domain
+[r,p] = corrcoef(BDI,y2);
+disp(r(2,1));
+disp(p(2,1));
+
 % Reorganize to remove NaNs from BSMAS
 BSMAS(:,2) = data_mat_monetary(:,3);
 BSMAS(:,3) = data_mat_social(:,3);
@@ -420,7 +428,15 @@ xlabel('BSMAS Score');
 title('Negative Relationship between Social Media Addiction and Effort in Monetary Domain');
 ylabel('Proportion of hard-task choices');
 
-
+% stats
+% BSMAS and effort: monetary domain
+[r,p] = corrcoef(BSMAS(:,1),y1);
+disp(r(2,1));
+disp(p(2,1));
+% BSMAS and effort: social domain
+[r,p] = corrcoef(BSMAS(:,1),y2);
+disp(r(2,1));
+disp(p(2,1));
 
 
 
