@@ -252,6 +252,7 @@ set(axes1,'XTick',[1 2],'XTickLabel',...
     {'Monetary', 'Social'});
 
 % stats
+disp("t-test: does proportion of hard-task choices overall differ between monetary and social domains?");
 [h,p,ci,stats] = ttest(data_mat_monetary(:,3),data_mat_social(:,3));
 disp(h);
 disp(p);
@@ -309,22 +310,20 @@ set(axes1,'XTick',[1 2 3 4 5 6],'XTickLabel',...
 
 % organize data
 money_mag = data_mat_monetary(:,7:9);
-money_mag_avgs = [];
 mag_avgs(1,1) = mean(money_mag(:,1));
 mag_avgs(1,3) = mean(money_mag(:,2));
 mag_avgs(1,5) = mean(money_mag(:,3));
-social_mag = data_mat_social(:,4:6);
-social_mag_avgs = [];
+social_mag = data_mat_social(:,7:9);
 mag_avgs(1,2) = nanmean(social_mag(:,1));
 mag_avgs(1,4) = nanmean(social_mag(:,2));
 mag_avgs(1,6) = nanmean(social_mag(:,3));
 
-sem(1,1) = std(social_mag(:,1))/sqrt(length(social_mag(:,1)));
-sem(1,3) = std(social_mag(:,2))/sqrt(length(social_mag(:,2)));
-sem(1,5) = std(social_mag(:,3))/sqrt(length(social_mag(:,3)));
-sem(1,2) = std(social_mag(:,1))/sqrt(length(social_mag(:,1)));
-sem(1,4) = std(social_mag(:,2))/sqrt(length(social_mag(:,2)));
-sem(1,6) = std(social_mag(:,3))/sqrt(length(social_mag(:,3)));
+sem(1,1) = nanstd(social_mag(:,1))/sqrt(length(social_mag(:,1)));
+sem(1,3) = nanstd(social_mag(:,2))/sqrt(length(social_mag(:,2)));
+sem(1,5) = nanstd(social_mag(:,3))/sqrt(length(social_mag(:,3)));
+sem(1,2) = nanstd(social_mag(:,1))/sqrt(length(social_mag(:,1)));
+sem(1,4) = nanstd(social_mag(:,2))/sqrt(length(social_mag(:,2)));
+sem(1,6) = nanstd(social_mag(:,3))/sqrt(length(social_mag(:,3)));
 
 % bar graph
 x = 1:6;
@@ -382,10 +381,12 @@ ylabel('Proportion of hard-task choices');
 
 % stats
 % BDI and effort: monetary domain
+disp("BDI and effort: monetary domain (r, p)");
 [r,p] = corrcoef(BDI,y1);
 disp(r(2,1));
 disp(p(2,1));
 % BDI and effort: social domain
+disp("BDI and effort: social domain (r, p)");
 [r,p] = corrcoef(BDI,y2);
 disp(r(2,1));
 disp(p(2,1));
@@ -417,11 +418,11 @@ title('Negative Relationship between Social Media Addiction and Effort in Moneta
 ylabel('Proportion of hard-task choices');
 
 % stats
-% BSMAS and effort: monetary domain
+disp("BSMAS and effort: monetary domain");
 [r,p] = corrcoef(BSMAS(:,1),y1);
 disp(r(2,1));
 disp(p(2,1));
-% BSMAS and effort: social domain
+disp("BSMAS and effort: social domain");
 [r,p] = corrcoef(BSMAS(:,1),y2);
 disp(r(2,1));
 disp(p(2,1));
