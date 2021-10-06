@@ -17,6 +17,11 @@ useable csv format.
     indistinguishable from the output of etext_to_rcsv, only without the tedious
     step of exporting the 'E-Prime text' file by hand.
 command line usage: python convert_eprime.py [function_name] [inputs]
+
+[Jimmy notes, 6oct2021]
+Script taken from here: https://github.com/tsalo/convert-eprime/blob/main/convert_eprime/convert.py
+Intended use is to convert e-prime .txt output to .csv & ultimately to bids format for effort task data
+
 """
 from __future__ import print_function
 from builtins import range
