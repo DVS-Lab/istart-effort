@@ -66,6 +66,8 @@ for d = 1:length(domains)
         % calculate % hard overall
         percent_hard_overall = nansum(effort_data(:,4))/(length(effort_data(:,4))-sum(isnan(effort_data(:,4))));
         
+        percent_easy_overall = choice(nansum(choice(:,1)==1))/choice(nansum(choice(:,1)));
+        
         % separate probabilities & find percent hard for each
         prob_12 = effort_data;
         prob_12(prob_12(:,3)~=12,:) = [];
