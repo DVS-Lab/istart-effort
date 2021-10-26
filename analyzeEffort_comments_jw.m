@@ -38,6 +38,16 @@ for d = 1:length(domains) %d: also character array?
         
         % strip out irrelevant information and missed trials
         T = T(:,{'Amount','Choice','Completed','Probability'});
+        
+        easytrials = T.Choice == 0 & ~isnan(T.Choice);
+        hardtrials = T.Choice == 1 & ~isnan(T.Choice);
+        noresptrials = T.Choice == 2 & ~isnan(T.Choice);
+        choicelength = ~isnan(T.Choice);
+        
+        easyprob = sum(easytrials)/length(choicelength);
+        hardprob = sum(hardtrials)/length(choicelength);
+        norespprob = sum(noresptrials)/length(choicelength);
+        
         goodtrials = T.Choice < 2 & ~isnan(T.Choice) & T.Amount > 0;
         T = T(goodtrials,:);
         T.zAmount = zscore(T.Amount);
@@ -81,6 +91,9 @@ for d = 1:length(domains) %d: also character array?
         for b = 1:10
             data_mat(i,b+4) = mean(T.Choice(T.ev_binned == b));
         end
+        data_mat(i,15) = easyprob;
+        data_mat(i,16) = hardprob;
+        data_mat(i,17) = norespprob;
     end
     
     % plot betas for logistic regression
