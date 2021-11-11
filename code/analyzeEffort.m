@@ -33,17 +33,19 @@ for d = 1:length(domains)
         
         % put data into table
         fname = sourcedata{i};
+        % sub-1007 does not have NULL
         T = readtable(fullfile(sourcedatadir,fname),'TreatAsEmpty','NULL');
         
         % strip out irrelevant information and missed trials
         T = T(:,{'Amount','Choice','Completed','Probability'});
-        goodtrials = T.Choice < 2 & ~isnan(T.Choice);
+        goodtrials = T.Choice < 2 & ~isnan(T.Choice) & T.Amount > 0;
         T = T(goodtrials,:);
         T.zAmount = zscore(T.Amount);
         T.zProbability = zscore(T.Probability);
         
         dsa = T;
-        modelspec = 'Choice ~ zAmount + zProbability';
+        %modelspec = 'Choice ~ zAmount + zProbability';
+        modelspec = 'Choice ~ zAmount*zProbability';
         mdl = fitglm(dsa,modelspec,'Distribution','binomial');
                 
         % add expected value to the table and bin values
@@ -63,13 +65,19 @@ for d = 1:length(domains)
         % extract subject number from file name
         subnum = str2double(fname(3:6));
         
+        %if subnum == 1007 && strcmp(domain,'social')
+        %    keyboard
+        %end
         
         % 14 columns: (sub, beta_amount, beta_prob, beta_ev, ev_bin_choice1-10)
         data_mat(i,1) = subnum;
-        data_mat(i,2) = mdl.Coefficients.Estimate(2);
-        data_mat(i,3) = mdl.Coefficients.Estimate(3);
+        %data_mat(i,2) = mdl.Coefficients.Estimate(2);
+        %data_mat(i,3) = mdl.Coefficients.Estimate(3);
         %data_mat(i,4) = mdl.Coefficients.Estimate(4);
-        data_mat(i,4) = 0;
+        data_mat(i,2) = mdl.Coefficients.tStat(2);
+        data_mat(i,3) = mdl.Coefficients.tStat(3);
+        data_mat(i,4) = mdl.Coefficients.tStat(4);
+        %data_mat(i,4) = 0;
         for b = 1:10
             data_mat(i,b+4) = mean(T.Choice(T.ev_binned == b));
         end
@@ -90,7 +98,7 @@ for d = 1:length(domains)
     hold off
     xlabel('Condition');
     title(['Logisitic Regression: ' domain ]);
-    ylabel('Beta Coef');
+    ylabel('t-stat');
     set(axes1,'XTick',[1 2 3],'XTickLabel',...
         {'Amount','Probability','Expected Value'});
     
@@ -105,14 +113,61 @@ for d = 1:length(domains)
     hold on
     er = errorbar(x,choice_mean,choice_se,choice_se);
     er.Color = [0 0 0];
-    hline(.5)
+    %hline(.5)
     ylim(axes1,[0 1]);
     hold off
     xlabel('Expected Value Bin');
     title(['Effort as function of Expected Value: ' domain ]);
     ylabel('Prop. Accept Hard');
     
+    % compile beta stats, 4 columns: M betas se, M betas mean, S se, S mean
+    if d == 1
+        betas_se_both(1,1) = betas_se(1,1);
+        betas_se_both(1,3) = betas_se(1,2);
+        %betas_se_both(1,5) = betas_se(1,3);
+        betas_mean_both(1,1) = betas_mean(1,1);
+        betas_mean_both(1,3) = betas_mean(1,2);
+        %betas_mean_both(1,5) = betas_mean(1,3);
+    else
+        betas_se_both(1,2) = betas_se(1,1);
+        betas_se_both(1,4) = betas_se(1,2);
+        %betas_se_both(1,6) = betas_se(1,3);
+        betas_mean_both(1,2) = betas_mean(1,1);
+        betas_mean_both(1,4) = betas_mean(1,2);
+        %betas_mean_both(1,6) = betas_mean(1,3);
+    end
     
 end
 
+% % plot both domains together
+% beta_stats = beta_stats(1:2,:);
+% figure, barwitherr([beta_stats(:,1);beta_stats(:,3)],[beta_stats(:,2);beta_stats(:,4)]);
+% title('Logisitic Regression');
+% ylabel('t-stat');
+% set(axes1,'XTick',[1 2 3 4],'XTickLabel',...
+%     {'Amount','Probability'});
+
+
+% plot betas for logistic regression
+x = 1:4;
+figure1 = figure('Name','Logistic Regression: ');
+axes1 = axes('Parent',figure1);
+hold(axes1,'on');
+bar(x,betas_mean_both)
+hold on
+er = errorbar(x,betas_mean_both,betas_se_both,betas_se_both);
+er.Color = [0 0 0];
+er.LineStyle = 'none';
+hold off
+xlabel('Condition');
+title('Logisitic Regression: both domains');
+ylabel('t-stat');
+set(axes1,'XTick',[1 2 3 4],'XTickLabel',...
+    {'Monetary Amount','Social Amount','Monetary Probability','Social Probability'});
+% figure1(1).FaceColor = 'r';
+% figure1(2).FaceColor = 'b';
+% figure1(3).FaceColor = 'r';
+% figure1(4).FaceColor = 'b';
+% figure1(5).FaceColor = 'r';
+% figure1(6).FaceColor = 'b';
 

@@ -14,6 +14,8 @@
 %% Script
 
 clear;
+scriptsdir = pwd;
+cd ..
 maindir = pwd;
 
 domains = {'monetary', 'social'};
@@ -219,9 +221,9 @@ data_mat_monetary = data_mat(data_mat(:,1)==1,:);
 data_mat_social = data_mat(data_mat(:,1)==2,:);
 
 % resize monetary and concatenate monetary and social matrices
-data_mat_monetary(4,:) = []; %removes sub 1004
-data_mat_monetary = data_mat_monetary(1:15,:);
-data_mat = [data_mat_monetary(1:15,:) data_mat_social];
+%data_mat_monetary(4,:) = []; %removes sub 1004
+%data_mat_monetary = data_mat_monetary(1:15,:);
+%data_mat = [data_mat_monetary(1:15,:) data_mat_social];
 
 writematrix(data_mat, 'data_mat.csv'); 
 
@@ -356,81 +358,80 @@ set(axes1,'XTick',[1 2 3 4 5 6],'XTickLabel',...
 %% Scatterplots for proportion of hard-task choices and BDI / BSMAS for each domain
 
 % organize data
-survey_data = readmatrix(fullfile(maindir,'data/BDI&BSMAS.xlsx'));
-BDI = survey_data(:,2);
-BSMAS = survey_data(:,3);
-y1 = data_mat_monetary(:,3);
-y2 = data_mat_social(:,3);
-
-% scatterplot for BDI
-figure1 = figure('Name','Negative Relationship between Depression and Effort in Monetary Domain');
-axes1 = axes('Parent',figure1);
-hold(axes1,'on');
-p1 = polyfit(BDI,y1,1);
-p2 = polyfit(BDI,y2,1);
-px = [min(BDI) max(BDI)];
-py1 = polyval(p1,px);
-py2 = polyval(p2,px);
-scatter(BDI,y1,'filled','g');
-hold on
-plot(px,py1,'LineWidth',2,'Color','g');
-scatter(BDI,y2,'filled','b');
-plot(px,py2,'LineWidth',2,'Color','b');
-hold off
-xlabel('BDI Score');
-title('Negative Relationship between Depression and Effort in Monetary Domain');
-ylabel('Proportion of hard-task choices');
-
-% stats
-% BDI and effort: monetary domain
-disp("BDI and effort: monetary domain (r, p)");
-[r,p] = corrcoef(BDI,y1);
-disp(r(2,1));
-disp(p(2,1));
-% BDI and effort: social domain
-disp("BDI and effort: social domain (r, p)");
-[r,p] = corrcoef(BDI,y2);
-disp(r(2,1));
-disp(p(2,1));
-
-% Reorganize to remove NaNs from BSMAS
-BSMAS(:,2) = data_mat_monetary(:,3);
-BSMAS(:,3) = data_mat_social(:,3);
-BSMAS(isnan(BSMAS(:,1)),:) = [];
-y1 = BSMAS(:,2);
-y2 = BSMAS(:,3);
-
-% scatterplot for BSMAS
-figure1 = figure('Name','Negative Relationship between Social Media Addiction and Effort in Monetary Domain');
-axes1 = axes('Parent',figure1);
-hold(axes1,'on');
-p1 = polyfit(BSMAS(:,1),y1,1);
-p2 = polyfit(BSMAS(:,1),y2,1);
-px = [min(BSMAS(:,1)) max(BSMAS(:,1))];
-py1 = polyval(p1,px);
-py2 = polyval(p2,px);
-scatter(BSMAS(:,1),y1,'filled','g');
-hold on
-plot(px,py1,'LineWidth',2,'Color','g');
-scatter(BSMAS(:,1),y2,'filled','b');
-plot(px,py2,'LineWidth',2,'Color','b');
-hold off
-xlabel('BSMAS Score');
-title('Negative Relationship between Social Media Addiction and Effort in Monetary Domain');
-ylabel('Proportion of hard-task choices');
-
-% stats
-disp("BSMAS and effort: monetary domain");
-[r,p] = corrcoef(BSMAS(:,1),y1);
-disp(r(2,1));
-disp(p(2,1));
-disp("BSMAS and effort: social domain");
-[r,p] = corrcoef(BSMAS(:,1),y2);
-disp(r(2,1));
-disp(p(2,1));
-
-
-% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
+%survey_data = readmatrix(fullfile(maindir,'data/BDI&BSMAS.xlsx'));
+%BDI = survey_data(:,2);
+%BSMAS = survey_data(:,3);
+%y1 = data_mat_monetary(:,3);
+%y2 = data_mat_social(:,3);
+%
+%% scatterplot for BDI
+%figure1 = figure('Name','Negative Relationship between Depression and Effort in Monetary Domain');
+%axes1 = axes('Parent',figure1);
+%hold(axes1,'on');
+%p1 = polyfit(BDI,y1,1);
+%p2 = polyfit(BDI,y2,1);
+%px = [min(BDI) max(BDI)];
+%py1 = polyval(p1,px);
+%py2 = polyval(p2,px);
+%scatter(BDI,y1,'filled','g');
+%hold on
+%plot(px,py1,'LineWidth',2,'Color','g');
+%scatter(BDI,y2,'filled','b');
+%plot(px,py2,'LineWidth',2,'Color','b');
+%hold off
+%xlabel('BDI Score');
+%title('Negative Relationship between Depression and Effort in Monetary Domain');
+%ylabel('Proportion of hard-task choices');
+%
+%% stats
+%% BDI and effort: monetary domain
+%disp("BDI and effort: monetary domain (r, p)");
+%[r,p] = corrcoef(BDI,y1);
+%disp(r(2,1));
+%disp(p(2,1));
+%% BDI and effort: social domain
+%disp("BDI and effort: social domain (r, p)");
+%[r,p] = corrcoef(BDI,y2);
+%disp(r(2,1));
+%disp(p(2,1));
+%
+%% Reorganize to remove NaNs from BSMAS
+%BSMAS(:,2) = data_mat_monetary(:,3);
+%BSMAS(:,3) = data_mat_social(:,3);
+%BSMAS(isnan(BSMAS(:,1)),:) = [];
+%y1 = BSMAS(:,2);
+%y2 = BSMAS(:,3);
+%
+%% scatterplot for BSMAS
+%figure1 = figure('Name','Negative Relationship between Social Media Addiction and Effort in Monetary Domain');
+%axes1 = axes('Parent',figure1);
+%hold(axes1,'on');
+%p1 = polyfit(BSMAS(:,1),y1,1);
+%p2 = polyfit(BSMAS(:,1),y2,1);
+%px = [min(BSMAS(:,1)) max(BSMAS(:,1))];
+%py1 = polyval(p1,px);
+%py2 = polyval(p2,px);
+%scatter(BSMAS(:,1),y1,'filled','g');
+%hold on
+%plot(px,py1,'LineWidth',2,'Color','g');
+%scatter(BSMAS(:,1),y2,'filled','b');
+%plot(px,py2,'LineWidth',2,'Color','b');
+%hold off
+%xlabel('BSMAS Score');
+%title('Negative Relationship between Social Media Addiction and Effort in Monetary Domain');
+%ylabel('Proportion of hard-task choices');
+%
+%% stats
+%[r,p] = corrcoef(BSMAS(:,1),y1);
+%disp(r(2,1));
+%disp(p(2,1));
+%disp("BSMAS and effort: social domain");
+%[r,p] = corrcoef(BSMAS(:,1),y2);
+%disp(r(2,1));
+%disp(p(2,1));
+%
+%
+%% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
 % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
 % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
 % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % % %
