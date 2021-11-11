@@ -20,6 +20,17 @@ maindir = pwd;
 
 domains = {'monetary', 'social'};
 
+for d = 1:length(domains)
+   domain = domains{d};
+   sourcedatadir = fullfile(maindir,'data',domain);
+   sourcedata = dir([sourcedatadir '/*.xlsx']);
+   sourcedata = struct2cell(sourcedata);
+   sourcedata = sourcedata(1,1:end);
+end
+
+sourcedata;
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 % preallocate vars that otherwise change sizes in loop below:
 m_length = 0;
 reward_data_monetary = NaN(94,20);
