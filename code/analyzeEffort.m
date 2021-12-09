@@ -26,7 +26,7 @@ for d = 1:length(domains)
     
     
     % 14 columns: (sub, beta_amount, beta_prob, beta_ev, ev_bin_choice1-10)
-    data_mat = zeros(length(sourcedata),14);
+    data_mat = zeros(length(sourcedata),16);
     
     sublist = zeros(length(sourcedata),1);
     for i = 1:length(sourcedata)
@@ -34,10 +34,10 @@ for d = 1:length(domains)
         % put data into table
         fname = sourcedata{i};
         % sub-1007 does not have NULL
-        T = readtable(fullfile(sourcedatadir,fname),'TreatAsEmpty','NULL');
+        TT = readtable(fullfile(sourcedatadir,fname),'TreatAsEmpty','NULL');
         
         % strip out irrelevant information and missed trials
-        T = T(:,{'Amount','Choice','Completed','Probability'});
+        T = TT(:,{'Amount','Choice','Completed','Probability'});
         goodtrials = T.Choice < 2 & ~isnan(T.Choice) & T.Amount > 0;
         T = T(goodtrials,:);
         T.zAmount = zscore(T.Amount);
@@ -80,6 +80,18 @@ for d = 1:length(domains)
         %data_mat(i,4) = 0;
         for b = 1:10
             data_mat(i,b+4) = mean(T.Choice(T.ev_binned == b));
+        end
+        
+        if d == 1 
+            v = length(TT.Choice)-(sum(isempty(TT.Choice)));
+            w = v-sum(TT.Choice==2);
+            probChoice_monetary(i,1) = subnum;
+            probChoice_monetary(i,2) = w/v;
+        else
+            t = length(TT.Choice)-(sum(isempty(TT.Choice)));
+            u = t-sum(TT.Choice==2);
+            probChoice_social(i,1) = subnum;
+            probChoice_social(i,2) = u/t;
         end
     end
     

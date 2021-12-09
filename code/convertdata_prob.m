@@ -30,7 +30,7 @@ for d = 1:length(domains)
     domain = domains{d};
     
     % build path for data and create list of files
-    sourcedatadir = fullfile(maindir,'data/sourcedata/',domain);
+    sourcedatadir = fullfile(maindir,'data/',domain);
     sourcedata = dir([sourcedatadir '/*.xls*']);
     sourcedata = struct2cell(sourcedata);
     sourcedata = sourcedata(1,1:end);
